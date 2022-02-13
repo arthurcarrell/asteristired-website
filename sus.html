@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <main>
+        <p id="p1">Generating sus</p>
+        <script>
+            var Message
+            function getRandomInt(max) {
+                return Math.floor(Math.random() * max);
+            }
+            random = getRandomInt(4)
+            console.log(random)
+            switch (random) {
+                case 0:
+                message = "bro u aint sus my g"
+                break;
+                case 1:
+                message = "eh, your not so sus."
+                break;
+                case 2:
+                message = ("eh ur kinda sus.")
+                break;
+                case 3:
+                message = ("bro, your sus.")
+                break;
+                case 4:
+                message = ("stay away from me you impostor!!!!")
+                break;
+                }
+            document.getElementById("p1").innerHTML = message
+        </script>
+    </main>
+</html>
