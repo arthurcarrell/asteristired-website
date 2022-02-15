@@ -13,7 +13,7 @@ body {
   background-color: rgb(39, 39, 39);
 }
 .button {
-  background-color: #f84747; /*Light Red */
+  background-color: #f84747;
   border: #f84747;
   color: white;
   padding: 16px 32px;
@@ -41,9 +41,9 @@ Hello! Click the button below to generate game/story ideas!
 </p>
 <button class="button", onclick="generate()">Click me</button>
 <script>
-const chrs = ["Princess","Dragon","Robot","Human","Dog","Magnet","Mirror","Rock","Spy"];
-const certaincy = ["needs to","wants to","is forced to","is required to","decides to"];
-const quest = ["fight","go on an adventure with","get the treasure with","assasinate","go hunting with","go diving with","run from","save","follow"];
+var chrs = ["Princess","Dragon","Robot","Human","Dog","Magnet","Mirror","Rock","Spy"];
+var certaincy = ["needs to","wants to","is forced to","is required to","decides to"];
+var quest = ["fight","go on an adventure with","get the treasure with","assasinate","go hunting with","go diving with","run from","save","follow"];
 class genadventure{
     constructor(){
         /* Generates properties of the adventure*/
@@ -58,13 +58,18 @@ class genadventure{
         
     };
 };
-function getRandomInt(max) {
-    return Math.floor(Math.random() * max);
-}
 function generate(){
     console.log("clicked.")
     adventure = new genadventure()
     document.getElementById("ideatxt").innerHTML = `The ${adventure.character} ${adventure.certaincy} ${adventure.quest} the ${adventure.character2}`;
 }
+/* Secret ;) */
+var typedWord = '';
+window.addEventListener('keypress', function(e){
+  var c = String.fromCharCode(e.keyCode);
+  typedWord += c.toLowerCase();
+  if(typedWord.length > 4) typedWord = typedWord.slice(1);
+  if(typedWord == 'sans') window.location.replace("http://www.asteristired.com/sanshmmm.html");; 
+});
 </script>
 </html>
