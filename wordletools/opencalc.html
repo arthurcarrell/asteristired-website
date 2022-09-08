@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<title>Wordle But Science</title>
+<style>
+body {
+    background-color: rgb(36, 36, 36);
+    line-height: 1.2;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    text-align: center;
+}
+
+p {
+    padding: 500px,0;
+    font-family: sans-serif;
+    color: white;
+    font-size: 150%;
+
+}
+progress {
+    width: 500px;
+}
+</style>
+<p style="font-size: 200%;">Enter your opener:</p>
+<p id="openerenter"></p>
+<p id="progress"></p>
+<p id="showstats"></p>
+<p id="answershow"></p><br><br>
+<p id="showfreqs" style="text-align: left;"></p>
+<script src="wordlist.js"></script>
+<script>
+var typingLet = []
+var setopener = 1
+var greenletters = []
+var yellowletters = []
+var letterstate = [0,0,0,0,0]
+var allresponses = {}
+var allowedLetters = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","?"]
+
+var answer = wordleanswers[Math.floor(Math.random()*wordleanswers.length)].toUpperCase();
+var answerword = answer.split("")
+var doubletrack = answer.split("")
+function addletter(letter){typingLet.push(letter.toUpperCase());openerenter.innerHTML = typingLet.join("")}
+function removeletter(){typingLet.pop(typingLet[typingLet.length]);openerenter.innerHTML = typingLet.join("")}
+
+function guessallwords(){
+    greenletters = []
+    yellowletters = []
+    letterstate = [0,0,0,0,0]
+    answer = wordleanswers[Math.floor(Math.random()*wordleanswers.length)].toUpperCase();
+    answerword = answer.split("")
+    doubletrack = answer.split("")
+    guessword()
+    wordleanswers.pop(answer)
+    if(letterstate.join("/") in allresponses == false){allresponses[letterstate.join("/")] = 1} else {
+        allresponses[letterstate.join("/")] += 1
+    }
+    if (wordleanswers.length < 1){
+        finalres = sortobj(allresponses)
+        showfreq()
+    }
+
+}
+function showfreq(){
+    for (k=0;k < finalres.length;k++){
+       showfreqs.innerHTML += `${emojifyres(finalres[k][0].split("/"))} - ${finalres[k][1]} occurences. (${Math.round((finalres[k][1] / 2308) * 100)}%) <progress value=${Math.round((finalres[k][1] / 2308) * 100)} max=100></progress><br>`;
+    }
+}
+function guessword(){
+    var wordtoguess = typingLet
+    for (i=0;i < 5;i++){
+        if (answerword.includes(wordtoguess[i]) && wordtoguess[i] != answerword[i]){
+            letterstate[i] = 1;
+            yellowletters.push(wordtoguess[i])
+            doubletrack.pop(wordtoguess[i])
+        } else if (wordtoguess[i] == answerword[i]){
+            letterstate[i] = 2;
+            greenletters.push(wordtoguess[i])
+            doubletrack.pop(wordtoguess[i])
+        }
+    }
+    progress.innerHTML = `Ran Simulation ${(2309 - wordleanswers.length) + 1} of 2309.`
+    showstats.innerHTML = emojifyres(letterstate)
+    answershow.innerHTML = `Answer: ${answer}`
+
+}
+
+function sortobj(dict){
+    let items = Object.keys(dict).map(function(key) {
+    return [key, dict[key]];
+});
+
+    // Sort the array based on the second element
+    items.sort(function(first, second) {
+        return second[1] - first[1];
+    });
+    return items
+}
+
+function emojifyres(result){
+    let showres = []
+    for (j=0;j < 5;j++){
+        if (result[j] == 1){showres.push("\uD83D\uDFE9")}
+        if (result[j] == 2){showres.push("\uD83D\uDFE8")}
+        if (result[j] == 0){showres.push("\u2B1B")}
+    }
+    return showres.join("")
+}
+
+document.body.onkeyup = function(e){
+    if (allowedLetters.includes(e.key) && typingLet.length <= 4 && setopener == 1){addletter(e.key)} else if (e.key == "Backspace" && setopener == 1) {removeletter()} else if (e.key == "Enter" && setopener == 1){
+        if (typingLet.length == 5){
+            setopener = 0;
+            setInterval(function(){ 
+                if (wordleanswers.length > 0){guessallwords()}
+            }, 1);
+        }
+    }
+}
+
+</script>
+</html>

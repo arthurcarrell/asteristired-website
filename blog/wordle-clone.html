@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<style>
+.title {
+    padding: 200px, 0;
+    font-size: 200%;
+    font-family: sans-serif;
+    color: white;
+}
+body {
+    background-color: rgb(36, 36, 36);
+    color: white;
+    font-family: sans-serif;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    font-size: 150%;
+}
+
+img {
+    text-align: center;
+}
+.markdown{
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.graytxt {
+    color: gray
+}
+
+a:link {
+    /* set color of unvisited link*/
+    color: rgb(255, 255, 255);
+}
+a:visited {
+    /* set color of visited link*/
+    color: rgb(255, 255, 255);
+}
+</style>
+<div class="title"><b>Wordle clone: How wordle works.</b>
+<p>Well, my version atleast...</p></div>
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Wordle_196_example.svg/1200px-Wordle_196_example.svg.png", height="300", width="270">
+<body>
+<p>Wordle is great. Originally starting as a present for the creator Josh Wardle's girlfriend, Josh sent his small webgame
+    to his family, in which, they quickly got addicted. the game then blew up from there. 
+</p>
+<h1>__________</h1>
+<h3>Looking through my horrible wordle code...</h3>
+<p>Of course, josh's wordle code is insanely different, but my achieves the same thing. kind of...</p>
+
+<span>The code begins with declaring the variables and then goes to waiting for the space key to be pressed!<br>
+Once the space key is pressed, it waits for an input. it then takes that input and puts it into uppercase. using .toUppercase();
+<br><br>Now the code splits your guess and the answer into a list. lets say you guessed: PLANE. it would create this list: ["P","L","A","N","E"]
+now let's say that the answer is SPACE. it splits the word into a list. ["S","P","A","C","E"]. 
+<br>
+For the green phase, it checks if the letter of both lists is the same:
+<br><br>
+if (wordYouGuessed[1 to 5] === correctWord[1 to 5]){<br>
+      // make it green<br>
+      //1 to 5 means that i do it 5 times. if you write "1 to 5" your code will break.<br>
+}<br><br>
+Now it's time to check if the answer is yellow. It checks if a letter is in the correctWord list.<br>
+if it is, it checks if its not in the same postition it is, otherwise it should be green.<br>
+
+</span>
+
+
+</body>
+</html>

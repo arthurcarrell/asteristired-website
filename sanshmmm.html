@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html>
+<style>
+body {
+  background-color: rgb(105, 51, 51);
+}
+p {
+  padding: 300px 0;
+  color: rgb(255, 255, 255);
+  font-family: sans-serif;
+  font-size: 150%;
+  text-align: center;
+}
+.button {
+  background-color: #f84747;
+  border: #f84747;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 8px;
+  margin:auto;
+  display:block;
+  /* cant select text on button */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.button:hover {
+    background-color: #ff9f9f;
+}
+</style>
+<p id="maintxt">How did you get here?</p>
+<audio id="myAudio">
+<source src="sans.ogg" type="audio/ogg">
+</audio>
+<script>
+var audio = document.getElementById("myAudio"); 
+var text = 0;
+function begin() { 
+  audio.play();
+  switch(text){
+      case 0:
+      document.getElementById("maintxt").innerHTML = "It doesnt matter.";
+      break;
+      case 1:
+      document.getElementById("maintxt").innerHTML = "You've done something very bad.";
+      break;
+      case 2:
+      document.getElementById("maintxt").innerHTML = "You've done something very very very bad.";
+      break;
+      case 3:
+      document.getElementById("maintxt").innerHTML = "The code doesnt expect you to be here. its going to break.";
+      break;
+      case 4:
+      document.getElementById("maintxt").innerHTML = "Your in Limbo, youve either typed a forbidden phrase or the server errored and took you here.";
+      break;
+      case 5:
+      document.getElementById("maintxt").innerHTML = "Either one is not good.";
+      break;
+      case 6:
+      document.getElementById("maintxt").innerHTML = "Maybe, you can reverse the damage?";
+      text = 6
+      break;
+      case 69:
+      document.getElementById("maintxt").innerHTML = "See you!";
+      window.location.replace("http://www.asteristired.com/ideagenerator.html");
+      break;
+      
+
+  }
+  text += 1
+}  
+var typedWord = '';
+window.addEventListener('keypress', function(e){
+  var c = String.fromCharCode(e.keyCode);
+  typedWord += c.toLowerCase();
+  if(typedWord.length > 4) typedWord = typedWord.slice(1);
+  if(typedWord == 'snas'){
+    document.getElementById("maintxt").innerHTML = "I think you have fixed it! i would click that button again!";
+    text = 69
+  }
+});
+</script>
+<button class="button" onclick="begin()">Interact</button>
+</html>

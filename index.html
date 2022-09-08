@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<title>Arthurs cool website.</title>
+<body>
+<style>
+body {
+  background-color: rgb(63, 148, 148);
+}
+h1 {
+    padding: 500px,0;
+    font-family: sans-serif;
+    color: white;
+    font-size: 200%;
+    text-align: center;
+}
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+h2 {
+    padding: 500px,0;
+    font-family: sans-serif;
+    color: white;
+    font-size: 150%;
+    text-align: center;
+}
+#links {
+    padding: 500px,0;
+    font-family: sans-serif;
+    color: rgb(255, 255, 255);
+    font-size: 100%;
+    text-align: center;
+}
+a:link {
+    /* set color of unvisited link*/
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+}
+a:visited {
+    /* set color of visited link*/
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+}
+a:hover {
+    /* do when hovered over.*/
+  color: rgb(255, 255, 255);
+  font-size: 120%;
+  text-decoration: underline;
+  width: 75;
+  height: 75;
+}
+</style>
+<h1>Under Construction!!(soonTM)</h1>
+<img src="quagsire.png" alt="Quagsire" class="center" onclick="quagclick()">
+<h2 id="infotxt">Click Links below to visit those areas.</h2>
+<div id="links">
+<a href="http://www.asteristired.com/wordle/patch-1.3.html"><b>Wordle Clone</b></a></br>
+<a href="http://www.asteristired.com/ideagenerator.html">Idea Generator</a></br>
+<a href="http://www.asteristired.com/oldhomepage.html">Old Homepage</a></br>
+<a href="http://www.asteristired.com/button.html">Second Webpage I ever made.</a></br>
+<a href="http://www.asteristired.com/milkidlegame/game.html">[ALPHA] Milk Clicker Game</a>
+<div id="beta" style="display: none;">
+<p>_____</p>
+<h3 style="color: #ff4242;"><b>BETA AREA:</b></h3>
+<p>(These games are under heavy construction and may not work.)</p><br>
+<a href="http://www.asteristired.com/wordle/wordle-clonev2.html">Wordle Clone v2.0</a>
+</div>
+<p>_____</p>
+<a href="https://github.com/arthurcarrell"><img src="github.png" alt="github" width=50 height=50></a>
+<a href="https://replit.com/@asteristired"><img src="replitlogo.png" alt="replit" width=50 height=50></a>
+<a href="https://discordbotlist.com/bots/hyspy"><img src="hyspylogo.png" alt="hyspy discord bot" width=50 height=50></a>
+<a onclick="doormsg()"><img src="door.png" alt="DOOR" width=50 height=50></a>
+<p>I added some secret areas find them if you would like.</p>
+</div>
+<audio id="wowsosecret">
+<source src="jingle.ogg" type="audio/ogg">
+</body>
+<script>
+let randomNumber = 1+(100-1)*Math.random();
+randomNumber = Math.floor(randomNumber)
+if (randomNumber == 1){
+  window.location.href = "http://www.asteristired.com/recollection.html"
+} else {
+  console.log(randomNumber)}
+
+var wowsosecret = 0;
+var audio = document.getElementById("wowsosecret"); 
+var infotxt = document.getElementById("infotxt")
+var text = 0;
+var quagclicks = 0;
+function secret() { 
+  infotxt.innerHTML = "WOW! you are a good searcher!<br>Looks like a secret has appeared!"
+  alert("Secret admin powers activate! or maybe not.")
+  beta.style = "display: inline;"
+  audio.play();
+  wowsosecret = 1
+}
+var typedWord = '';
+window.addEventListener('keypress', function(e){
+  var c = String.fromCharCode(e.keyCode);
+  typedWord += c.toLowerCase();
+  if(typedWord.length > 11) typedWord = typedWord.slice(1);
+  if(typedWord == 'wowsosecret' && wowsosecret == 0){
+      secret()
+  }
+});
+var dooropen = 0;
+var answer;
+var doorclicks = 0;
+function doormsg(){
+    doorclicks += 1;
+    switch(doorclicks){
+      case 1:
+        alert("The door refuses to budge.");
+        break;
+      case 2:
+        alert("The door is locked...");
+        break;
+      case 3:
+        alert("This door is not open.");
+        break;
+      case 4:
+        alert("Its a locked door.");
+        break;
+      case 5:
+        alert("You've clicked on this door for 5 times now. what are you expecting to change?");
+        break;
+      case 6:
+        alert("You can check the website's code if you want, this door does literally nothing at the moment.");
+        break;
+      case 7:
+        alert("Although I have big plans for what will be behind this door.");
+        break;
+      case 8:
+        alert("Clicking on this door does nothing.");
+        doorclicks = 7;
+        break;
+    }
+}
+
+function bypass(){
+  console.log("oy, what ye doing in the console");
+}
+
+function quagclick(){
+  quagclicks += 1
+  if (quagclicks == 5 && wowsosecret == 0){
+    secret()
+  }
+}
+</script>
+</html>

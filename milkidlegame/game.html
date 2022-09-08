@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+<script src="allItems.js"></script>
+<style>
+html {
+    font-size: 100;
+    font-family: sans-serif;
+    color: white;
+}
+
+.background {
+    background-color: rgb(50, 50, 50);
+}
+
+.backgroundSpring {background-color: #2b5f37;}
+.backgroundSummer {background-color: #31ae4e;}
+.backgroundFall {background-color: #af742c;}
+.backgroundWinter {background-color: #c7c7c7;}
+.backgroundVoid {background-color: darkorchid;}
+
+.backgroundStrawberry {background-color: rgb(177, 96, 96);}
+.backgroundBlueberry {background-color: rgb(147, 102, 177);}
+
+.backgroundGold {
+    background-image: url("textures/gold-backround.jpg"); 
+}
+
+#darkbackground {
+    background-color: rgb(50, 50, 50);
+}
+
+.infoTextColor {color: #8f8f8f}
+
+.COMMON {color: white;}
+.UNCOMMON {color: rgb(63, 247, 46);}
+.RARE {color: rgb(77, 77, 237);}
+.EPIC {color: rgb(157, 54, 157);}
+.LEGENDARY {color: rgb(255, 204, 0);}
+.MYTHIC {color: rgb(255, 0, 200);}
+.DIVINE {color: cyan}
+.SPECIAL {color: rgb(224, 61, 61)}
+
+</style>
+<body class="background" id="backgroundTotal">
+<title>Milk Clicker</title>
+
+
+<div id="wrapper">
+<div id="ajLeft" style="padding:20px;float:left">
+<!-- TAB 1-->
+<div id="milkclicktab" style="overflow-y:scroll;height: 700px;">
+<img src="textures/milk-bottle.png" onclick="grantmilk(1)">
+<b><p id="manaInfo">MANA: <progress value="0" max="0"></progress> 0/0</p></b>
+<h1 id="milkamount">MILK: [[milkamount]]</h1>
+<p id="milkpersecond"></p>
+<div id="showbuilding"><!-- Shown buildings appear here--></div>
+</div>
+</div>
+<div id="ajCenter" style="padding:30px;float:left;background-color: rgb(66, 66, 66);overflow-y:scroll;height: 700px;">
+    <div id="shop">
+    <button id="savetxt" onclick="createsave()">Click to save</button>
+    <button id="deletetxt" onclick="deletesave()">Click to delete save</button><br>
+    <button id="playtxt" onclick="playtheme()">Play Current Theme!</button><br>
+    <span>Background: </span>
+    <select name="Background's" id="choosebackground">
+        <option value="Seasons">Season's</option>
+        <option value="berry">Berry</option>
+        <option value="gold">GOLD</option>
+    </select>
+    <h1>SHOP</h1>
+    <p id="unlockedbuildings" style="display: none;">[[unlockedbuildings]]</p>
+    <p id="gameInfo"></p>
+    <p>____________________________________________</p>
+    <div id="buildingdisplay"><!-- This is where the buildings get generated --></div>
+    <div id="hintbuildings"><i>You may need to do some more <b style="color: rgb(221, 98, 98)">research</b> to<br> unlock more buildings.</i></div>
+    </div>
+</div>
+</div>
+<div id="ajRight" style="padding:30px;float:left;background-color: rgb(110, 110, 110);overflow-y:scroll;height: 700px;">
+<h1>Building Interactables:</h1>
+<p>Not in alpha version!</p>
+<div id="darkbackground">
+<span id="items"></span>
+<p id="itemText"></p>
+</div>
+<div id="cowinteract">
+<img src="textures/cow.gif">
+<h3 id="itCowhappy">Cow Happiness: 10/10</h3>
+<p>Auto buy wheat when number reaches value of:</p><input type="number" min="0" max="9" id="autobuycow"><br>
+<img src="textures/wheat.png" width="50" height="50" onclick="buycowhappy(1,2500)"><p>Buy Wheat - Increase Happiness by 1. (2500M)</p>
+</div>
+<div id="mineinteract" style="display:block">
+<p id="mineelement"></p>
+<audio src="music/Spring.mp3" id="SpringTrack"></audio>
+<audio src="music/Summer.mp3" id="SummerTrack"></audio>
+<audio src="music/Fall.mp3" id="FallTrack"></audio>
+<audio src="music/Winter.mp3" id="WinterTrack"></audio>
+</div>
+</div>
+<div id="ajDev" style="padding:20px;float:left;background-color: rgb(0, 0, 0);display:none;">
+    <h1>Developer Area:</h1>
+    <p>Grant Milk:</p>
+    <button onclick="grantmilk(500)">+500 Milk</button>
+    <button onclick="grantmilk(5000)">+5000 Milk</button>
+    <button onclick="grantmilk(999999999)">+999999999 Milk</button><br>
+    <button onclick="grantmilk(Infinity)">Infinite Milk</button>
+    <p>Misc:</p>
+    <button onclick="unlockbuilding(alchemystation)">Unlock Alchemy Station</button>
+    <p>Variables</p>
+    <p id="devGameTicks" style="color:rgb(112, 200, 112)"></p>
+    <p id="devLoadSave" style="color:rgb(112, 200, 112)"></p>
+    <p id="devAdvancements" style="color:rgb(112, 200, 112)"></p>
+    <p id="devCowhappy" style="color:rgb(112, 200, 112)"></p>
+    <div id="cowinteract" style="display:none">HELLO THER</div>
+    </div>
+<script>
+// init variables
+var milk = 0;
+var advancements = ["Start"];
+var buildingsunlocked = 0;
+var savedata = "";
+var Cowhappy = 5;
+var gameticks = 0;
+var tickdelay = 100;
+var saveTickTime = 0;
+var milkPerTick = 0;
+var manaAmount = 0;
+var manaBonus = 0;
+var buildingsAmount = 0;
+var youritems = {}
+var dayofMonth = new Date().getDate();
+var blueberrymat = Math.random() < 0.5;
+var season;
+
+function shorten(value,shortfrom=1000) { // not my code
+    var newValue = value;
+    if (value >= shortfrom) {
+        var suffixes = ["", "K", "M", "B","T","Qa","Qi","Sx","Sp","Oc","No","De","Un","Du","Tr","Qu","Qua"];
+        var suffixNum = Math.floor( (""+value).length/3 );
+        var shortValue = '';
+        for (var precision = 2; precision >= 1; precision--) {
+            shortValue = parseFloat( (suffixNum != 0 ? (value / Math.pow(1000,suffixNum) ) : value).toPrecision(precision));
+            var dotLessShortValue = (shortValue + '').replace(/[^a-zA-Z 0-9]+/g,'');
+            if (dotLessShortValue.length <= 2) { break; }
+        }
+        if (shortValue % 1 != 0)  shortValue = shortValue.toFixed(1);
+        newValue = shortValue+suffixes[suffixNum];
+    }
+    return newValue;
+}
+
+function monthDiff(dateFrom, dateTo) { // not my code
+ return dateTo.getMonth() - dateFrom.getMonth() + 
+   (12 * (dateTo.getFullYear() - dateFrom.getFullYear()))
+}
+
+var year = monthDiff(new Date(2022,7),new Date(new Date().getFullYear(),new Date().getMonth()))
+
+class building {
+    constructor(name,baseprice,visiblename,texture="placeholder.png"){
+        this.name = name;
+        this.baseprice = baseprice;
+        this.visiblename = visiblename;
+        this.amount = 0;
+        this.price = this.baseprice;
+        this.displayelement = `${this.name}amount`;
+        this.texture = texture;
+        showbuilding.innerHTML += `<div id="show${this.name}"></div><br>`
+
+    }
+}
+function setBackground(background){
+    if (background == "Seasons"){document.getElementById("backgroundTotal").className = `background${season}`;}
+    if (background == "gold"){backgroundTotal.className = "backgroundGold"}
+    if (background == "berry"){
+        if (blueberrymat == true){backgroundTotal.className = "backgroundBlueberry"} else {backgroundTotal.className = "backgroundStrawberry"}
+    }
+}
+function setSeason(setseason="auto"){
+    let month;
+    let dayofMonth = new Date().getDate();
+    if (dayofMonth >= 0){season = "Spring"; month = 1;};
+    if (dayofMonth >= 8){season = "Summer"; month = 2;};
+    if (dayofMonth >= 16){season = "Fall"; month = 3;};
+    if (dayofMonth >= 24){season = "Winter"; month = 4;};
+    if (setseason !== "auto"){season = setseason}
+    gameInfo.innerHTML = `Year: ${year+1} / Month: ${month}/4 / Season: ${season} / v1.0`;
+    if (season == "Spring"){gameInfo.innerHTML += `<br><i class="MYTHIC">Cherry blossom boosts have a <b>10%</b> chance to appear.</i>`}
+    if (season == "Summer"){gameInfo.innerHTML += `<br><i class="UNCOMMON">Summer weather is boosting all MPS by <b>10%</b></i>`}
+    if (season == "Fall"){gameInfo.innerHTML += `<br><i class="LEGENDARY">Spooky candy has a chance to appear when clicking milk.<br> They reap rewards!</i>`}
+    if (season == "Winter"){gameInfo.innerHTML += `<br><i class="SPECIAL">Santa's little worker's have arrived, enjoy the festivites.</i>`}
+    setBackground("Seasons")
+}
+setSeason()
+function playtheme(){
+    try {
+        audio.pause();
+    }
+    catch(err){
+        console.error("Failed to stop music, No music playing.")
+    }
+    try{
+    audio = document.getElementById(`${season}Track`)
+    audio.pause();
+    audio.loop = true;
+    audio.play();
+    }
+    catch(err){
+        console.error("Did not find music.")
+    }
+}
+
+function showitemText(item){
+    item = youritems[item]
+    itemText.innerHTML = `<h3 class="${item["iteminfo"]["rarity"]}">${item["iteminfo"]["name"]}</h3><br>`
+    if (item["iteminfo"]["on-click"] !== "empty"){itemText.innerHTML += `<p class="${item["iteminfo"]["rarity"]}"><b>ON CLICK:</b> ${item["text"]["clickability"]["name"]}</p><p class="infoTextColor">${item["text"]["clickability"]["description"]}</p>`}
+    if (item["iteminfo"]["on-tick"] !== "empty"){itemText.innerHTML += `<p class="${item["iteminfo"]["rarity"]}"><b>PASSIVE:</b> ${item["text"]["tickability"]["name"]}</p><p class="infoTextColor">${item["text"]["tickability"]["description"]}</p>`}
+    itemText.innerHTML += `<br><h3 class="${item["iteminfo"]["rarity"]}">${item["iteminfo"]["rarity"]}</h3>`
+    if (item["iteminfo"]["tags"].includes("UPGRADED")){itemText.innerHTML += '<p class="infoTextColor"><i>(Upgraded)</i></p>';}
+}
+
+function grantitem(item){
+    if (allitems.hasOwnProperty(item) === false){item = "null"}
+    if (youritems.hasOwnProperty(item) === false){
+        youritems[item] = allitems[item]
+        items.innerHTML += `<img src="textures/${youritems[item]["iteminfo"]["texture"]}" height=50 width=50 onmouseover="showitemText('${item}')" onclick="useitem('${item}')" class="item">`;
+    } else if (youritems[item]["iteminfo"]["amount"] >= youritems[item]["iteminfo"]["maxamount"]) {
+       grantmilk(youritems["iteminfo"]["sellamount"])
+    } else {
+        youritems[item]["iteminfo"]["amount"] += 1
+    }
+    
+}
+
+function upgradefeature(item){
+    if (item === "cowbell"){youritems[item]["iteminfo"]["on-tick"] = "cowbellUpgrade";}
+    if (item === "springitem"){youritems[item]["iteminfo"]["on-tick"] = "springitemUpgrade";}
+    if (item === "summeritem"){youritems[item]["iteminfo"]["on-tick"] = "summeritemUpgrade";}
+    if (item === "fallitem"){youritems[item]["iteminfo"]["on-tick"] = "fallitemUpgrade";}
+    if (item === "winteritem"){youritems[item]["iteminfo"]["on-tick"] = "winteritemUpgrade";}
+    if (item === "voiditem"){youritems[item]["iteminfo"]["on-tick"] = "voiditemUpgrade";}
+}
+function upgradeitem(item){
+    if (youritems.hasOwnProperty(item)){ 
+        let rarity = youritems[item]["iteminfo"]["rarity"]
+        if (rarity == "COMMON"){youritems[item]["iteminfo"]["rarity"] = "UNCOMMON"} else
+        if (rarity == "UNCOMMON"){youritems[item]["iteminfo"]["rarity"] = "RARE"} else
+        if (rarity == "RARE"){youritems[item]["iteminfo"]["rarity"] = "EPIC"} else
+        if (rarity == "EPIC"){youritems[item]["iteminfo"]["rarity"] = "LEGENDARY"} else
+        if (rarity == "LEGENDARY"){youritems[item]["iteminfo"]["rarity"] = "MYTHIC"} else
+        if (rarity == "MYTHIC"){youritems[item]["iteminfo"]["rarity"] = "DIVINE"}
+        youritems[item]["iteminfo"]["tags"].push("UPGRADED");
+        upgradefeature(item)
+    }
+}
+function useitem(item){
+    if (youritems[item]["iteminfo"]["manause"] <= manaAmount){
+        manaAmount -= youritems[item]["iteminfo"]["manause"]
+        clickUse = youritems[item]["iteminfo"]["on-click"]
+        if (clickUse == "cowbellClick"){
+            grantmilk((cow.amount * (0.1 * (Math.ceil(Cowhappy) / 5))) * 600000)
+        } else if (clickUse == "switchSpring"){setSeason("Spring")}
+        else if (clickUse == "switchSummer"){setSeason("Summer")}
+        else if (clickUse == "switchFall"){setSeason("Fall")}
+        else if (clickUse == "switchWinter"){setSeason("Winter")}
+        else if (clickUse == "switchVoid"){setSeason("Void")}
+    } else {
+        alert("You do not have enough mana for this!!")
+    }
+}
+cow = new building("cow",15,"Cow","cow.gif")
+farm = new building("farm",75,"Dairy Farm","farm.gif")
+mine = new building("mine",300,"Milk Mine","pickaxe.png")
+alchemystation = new building("alchemystation",1200,"Alchemy Station","potion.png")
+matterReform = new building("matterReform",4800,"Matter Reformer","matterReform.png")
+milkduper = new building("milkduper",19200,"Milk Duplicator","milk-bottle.png")
+
+function grantmilk(amount){
+    milk += amount;
+    milkamount.innerHTML = `MILK: ${shorten(Math.round(milk),1000000)}`
+
+}
+function buildingeffect(name, amount, bypass=false){
+    if (name.amount <= 6 || bypass == true) {
+        for (let i = 0; i < amount; i++) {
+            document.getElementById(`show${name.name}`).innerHTML += `<img src=textures/${name.texture} width=50 height=50>`;
+        }       
+    }
+}
+
+
+function grantbuilding(name,amount){
+    name.amount += amount;
+    buildingsAmount += amount;
+    name.price = ((name.amount* (name.amount * (name.baseprice * 1.5))) + name.baseprice);
+    console.log(name.price)
+    document.getElementById(name.displayelement).innerHTML = `<span style=color:#f2bd4b;> Amount: ${name.amount}</span><span style=color:#f2644b;> Price: ${shorten(name.price)} Milk</span>`;
+	buildingeffect(name,amount);
+    if (advancements.includes(name.name) == false){advancements.push(name.name)}
+}
+
+function buybuilding(name,amount){
+    if ((name.price * amount) <= milk){
+        milk -= name.price;
+        grantbuilding(name,amount);
+    } else {
+        alert("You cannot afford this!!")
+    }
+}
+function buycowhappy(give,cost){
+    if (milk >= cost){
+        milk -= cost
+        changecowhappy(give)
+    } else {
+        alert("You cannot afford this!!")
+    }
+}
+function unlockbuilding(name){
+    buildingsunlocked += 1;
+    unlockedbuildings.innerHTML = `Buildings Unlocked ${buildingsunlocked}/7`
+    buildingdisplay.innerHTML += `<img src=textures/${name.texture} width=20 height=20><span><button onclick="buybuilding(${name.name},1)">Buy A ${name.visiblename}</button></span><span id="${name.name}amount">[[${name.name}amount]]</span><br><br>`;
+    grantbuilding(name,0);
+}
+function init(){ // runs on startup
+    grantmilk(0);
+    unlockbuilding(cow)
+    unlockbuilding(farm)
+    unlockbuilding(mine)
+    unlockbuilding(alchemystation)
+    unlockbuilding(matterReform)
+    unlockbuilding(milkduper)
+    loadsave()
+}
+function changecowhappy(amount){
+    Cowhappy += amount;
+    if (Cowhappy > 10){Cowhappy = 10;}
+    if (Cowhappy < 1){Cowhappy = 1;}
+    if (Cowhappy >= 7){
+        itCowhappy.innerHTML = `Cow Happiness: <span style="color:#a2ff1f">${Math.ceil(Cowhappy)}/10</span>`
+    } else if (Cowhappy <= 4){
+        itCowhappy.innerHTML = `Cow Happiness: <span style="color:#a83232">${Math.ceil(Cowhappy)}/10</span>`
+    } else {
+        itCowhappy.innerHTML = `Cow Happiness: <span style="color:#f2b91d">${Math.ceil(Cowhappy)}/10</span>`
+    }
+    devCowhappy.innerHTML = `Cow Happiness: ${Cowhappy}`
+}
+
+function gametick(amount=1){ //runs every 0.1 seconds
+    for (i = 0; i < amount; i++){
+        var milkPerTick = 0;
+        var maxMana;
+        milkPerTick += cow.amount * (0.1 * (Math.ceil(Cowhappy) / 5))
+        milkPerTick += farm.amount * 0.5
+        milkPerTick += mine.amount * 0.8
+        milkPerTick += alchemystation.amount
+        milkPerTick += matterReform.amount * 1.5
+        milkPerTick += milkduper.amount * 2.5
+        if (season == "Summer"){milkPerTick =  milkPerTick * 1.1}
+        grantmilk(milkPerTick)
+        milkpersecond.innerHTML = `MPS: ${Math.floor(milkPerTick *10)}`;
+        changecowhappy(-0.0005)
+        maxMana = (Math.floor(buildingsAmount / 5) + manaBonus)
+        manaAmount += 0.005
+        if (maxMana < manaAmount){manaAmount = maxMana}
+        manaInfo.innerHTML = `MANA: <progress value="${manaAmount}" max="${maxMana}"></progress> ${Math.floor(manaAmount)}/${maxMana}`
+        if (autobuycow.value >= Cowhappy && milk >= 2500){
+            buycowhappy(1,2500)
+        }
+        if (saveTickTime >= 1){saveTickTime -= 1;} else {savetxt.innerHTML = "Click to save."}
+        gameticks += 1;
+        devGameTicks.innerHTML = `Game Ticks: ${gameticks}`
+        devLoadSave.innerHTML = `Save Data: ${savefile}`;
+        devAdvancements.innerHTML = `Advancements: ${advancements}`
+        setBackground(choosebackground.value)
+    }
+}
+
+init()
+setInterval(function(){ 
+    gametick();
+}, parseInt(tickdelay));
+
+
+
+function createsave(){
+    savefile = ''
+    savefile += `${advancements}`
+    savefile += `/${milk}`
+    savefile += `/${cow.amount}`
+    savefile += `/${farm.amount}`
+    savefile += `/${mine.amount}`
+    savefile += `/${alchemystation.amount}`
+    savefile += `/${Cowhappy}`
+    savefile += `/${matterReform.amount}`
+    savefile += `/${milkduper.amount}`
+    console.log(savefile)
+    setCookie("savedata",savefile)
+    savedata = savefile;
+    saveTickTime = 50;
+}
+var typedWord = '';
+window.addEventListener('keypress', function(e){
+  var c = String.fromCharCode(e.keyCode);
+  typedWord += c.toLowerCase();
+  if(typedWord.length > 7) typedWord = typedWord.slice(1);
+  if(typedWord == 'devmode'){ajDev.style.display = "block"};
+});
+function deletesave(){
+    console.log("Deleting Save.")
+    setCookie("savedata","",0)
+}
+function loadsave(){
+    console.log("Fetching save file...")
+    savefile = getCookie("savedata")
+    savedata = savefile;
+    savefile = savefile.split("/")
+    if (savedata != ""){
+        console.log("Save file found. loading save...")
+        advancements = savefile[0].split(",")
+        milk = parseInt(savefile[1])
+        grantmilk(0)
+        if (advancements.includes("cow")){grantbuilding(cow,parseInt(savefile[2]))}
+        if (advancements.includes("farm")){grantbuilding(farm,parseInt(savefile[3]))}
+        if (advancements.includes("mine")){grantbuilding(mine,parseInt(savefile[4]))}
+        if (advancements.includes("alchemystation")){grantbuilding(alchemystation,parseInt(savefile[5]))}
+        if (savefile.length >= 6){Cowhappy = parseInt(savefile[6])}
+        if (advancements.includes("matterReform")){grantbuilding(matterReform,parseInt(savefile[7]))}
+        if (advancements.includes("milkduper")){grantbuilding(milkduper,parseInt(savefile[8]))}
+    } else {
+        console.log("No save file detected. Cannot load save.");
+        
+    }
+    
+}
+
+function setCookie(cname, cvalue, exdays=3650) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  let expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  if (document.cookie == ''){
+    console.log("Failed to save game to cookies.")
+    alert("Failed to save game data. You might be offline or playing the game locally. (Error Code: 'cannotWriteToCookies')")
+    savetxt.innerHTML = "Failed to save game data.";
+  } else {
+    console.log("Game saved successfully.")
+    savetxt.innerHTML = "Saved Game to cookies.";
+  }
+}
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let ca = document.cookie.split(';');
+  for(let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+function testitems(){
+    milk = Infinity;
+    grantitem("cowbell");
+    grantitem("springitem");
+    grantitem("summeritem");
+    grantitem("fallitem");
+    grantitem("winteritem");
+    grantitem("voiditem");
+    grantitem("wowowowowow")
+}
+function upgradetest(){
+    upgradeitem("cowbell")
+    upgradeitem("springitem");
+    upgradeitem("summeritem");
+    upgradeitem("fallitem");
+    upgradeitem("winteritem");
+    upgradeitem("voiditem");
+    upgradeitem("null")
+}
+</script>
+</body>
+</html>

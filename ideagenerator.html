@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<title>Game Idea Generator</title>
+<style>
+p {
+  padding: 300px 0;
+  color: rgb(255, 255, 255);
+  font-family: sans-serif;
+  font-size: 150%;
+  text-align: center;
+}
+body {
+  background-color: rgb(39, 39, 39);
+}
+.button {
+  background-color: #f84747;
+  border: #f84747;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 8px;
+  margin:auto;
+  display:block;
+  /* cant select text on button */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.button:hover {
+    background-color: #ff9f9f;
+}
+</style>
+<body>
+<p id="ideatxt">
+Hello! Click the button below to generate game/story ideas!
+</p>
+<button class="button", onclick="generate()">Click me</button>
+<script>
+var chrs = ["Princess","Dragon","Robot","Human","Dog","Magnet","Mirror","Rock","Spy","Hitman"];
+var certaincy = ["needs to","wants to","is forced to","is required to","decides to","is paid to"];
+var quest = ["fight","go on an adventure with","get the treasure with","assasinate","go hunting with","go diving with","run from","save","follow"];
+class genadventure{
+    constructor(){
+        /* Generates properties of the adventure*/
+        var randChr = chrs[Math.floor(Math.random() * chrs.length)];
+        this.character = randChr;
+        var randCertaincy = certaincy[Math.floor(Math.random() * certaincy.length)];
+        this.certaincy = randCertaincy;
+        var randQuest = quest[Math.floor(Math.random() * quest.length)];
+        this.quest = randQuest;
+        var randChr2 = chrs[Math.floor(Math.random() * chrs.length)];
+        this.character2 = randChr2;
+        
+    };
+};
+function generate(){
+    console.log("clicked.")
+    adventure = new genadventure()
+    document.getElementById("ideatxt").innerHTML = `The ${adventure.character} ${adventure.certaincy} ${adventure.quest} the ${adventure.character2}`;
+}
+/* Secret ;) */
+var typedWord = '';
+window.addEventListener('keypress', function(e){
+  var c = String.fromCharCode(e.keyCode);
+  typedWord += c.toLowerCase();
+  if(typedWord.length > 4) typedWord = typedWord.slice(1);
+  if(typedWord == 'sans') window.location.replace("http://www.asteristired.com/sanshmmm.html");; 
+});
+</script>
+</html>

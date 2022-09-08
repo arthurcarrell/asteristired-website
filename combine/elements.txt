@@ -1,0 +1,13 @@
+// Defining an element using the text file
+// make."element"."color"."nest"
+
+make.Fire.#f55920.fireNest
+make.Water.#3f60d9.waterNest
+make.Energy.#7a502d.fireNest
+
+// Make a combination
+// "element1"+"element2"="element3"
+
+fire+water=energy
+
+// when finished run the "compile.py" file.

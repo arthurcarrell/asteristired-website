@@ -1,0 +1,68 @@
+<html>
+<style>
+p {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 120%;
+    text-align: center;
+    color: white;
+}
+html {
+    background-color: black;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+</style>
+<main><div id="letter"><br><br><br>
+<p>You have recieved a letter.<br>Press SPACE to open it.</p>
+</div>
+<div id="lettershow">
+<br><br><br><br><br>
+<p><img src="left.png" width="546" height="306"></p>
+</div>
+</main>
+<script>
+var audio = new Audio('forgotten.mp3');
+var audioPlayed = false;
+audio.loop = true;
+lettershow.style.display = "none";
+
+
+function setCookie(cname, cvalue, exdays=3650) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  let expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let ca = document.cookie.split(';');
+  for(let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+if (getCookie("beenHereToday") !== ""){
+  window.location.href = "http://www.asteristired.com"
+}
+
+setCookie("beenHereToday",true,1)
+document.addEventListener('keyup', event => {
+  if (event.code === 'Space' && audioPlayed === false) {
+    audioPlayed = true;
+    audio.play();
+    letter.style.display = "none";
+    lettershow.style.display = "block";
+  } else if (event.code === 'Space' && audioPlayed === true){window.location.href = "http://www.asteristired.com"};
+})
+</script>
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<title>Wordle Clone</title>
+<script>
+var version = 1.3;
+var beta = false;
+var newupdatepreview = true;
+</script>
+<meta name="viewport">
+<style>
+body {
+    background-color: rgb(36, 36, 36);
+    overflow: hidden;
+}
+
+#title {
+    padding: 200px, 0;
+    font-family: sans-serif;
+    color: rgb(255, 255, 255);
+    font-size: 300%;
+    text-align: center;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+#gametxt {
+    padding: 200px, 0;
+    font-family: sans-serif;
+    color: rgb(255, 255, 255);
+    font-size: 400%;
+    text-align: center;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+#extratxt {
+    padding: 200px, 0;
+    font-family: sans-serif;
+    color: rgb(255, 255, 255);
+    font-size: 120%;
+    text-align: center;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+.smalltxt {
+    padding: 200px, 0;
+    font-family: sans-serif;
+    color: rgb(255, 255, 255);
+    font-size: 75%;
+    text-align: center;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+#prevguess {
+    padding: 200px, 0;
+    font-family: sans-serif;
+    color: rgb(255, 255, 255);
+    font-size: 120%;
+    text-align: center;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+p {
+    padding: 500px,0;
+    font-family: sans-serif;
+    color: white;
+    font-size: 120%;
+    text-align: center;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+.yellow {
+    color: #b59f3b;
+}
+.green {
+    color: #538d4e;
+}
+.red {
+    color: #cf3b3b;
+}
+
+#image {
+    text-align: right;
+}
+a:link {
+  color: rgb(255, 255, 255);
+}
+
+a:visited {
+  color: rgb(255, 255, 255);
+}
+
+a:hover {
+  color: rgb(255, 255, 255);
+}
+
+a:active {
+  color: rgb(252, 252, 252);
+}
+</style>
+<b>
+<span><a href="http://www.asteristired.com/wordle/wordle-questions.html"><img width="30" height="30" src="questionmark.png", id="image"></a></span>
+<div id="title">
+<span>W O R D</span><span class="yellow" id="L"> L</span><span class="green" id="E"> E</span></br>
+<span id="secondtxt">C L O N E</span>
+<h3>_____</h3>
+</b>
+<h6 id="guesses">You have 6 attempts left!</h6>
+</div>
+<b>
+<div id="extratxt"><p id="press">PRESS</p></div>
+<div id="gametxt">
+<span id="l0">S</span>
+<span id="l1">P</span>
+<span id="l2">A</span>
+<span id="l3">C</span>
+<span id="l4">E</span>
+</b>
+</div>
+<b>
+<div id="prevguess"></div>
+</b>
+<p id="extraletters">__________</p>
+<p>Made in an afternoon by me :D</p>
+<div id="extratxt">
+<span id="intro">You have <b>6</b> attempts to guess the random <b>5</b> letter word. The color of the letter can help you.</span></br>
+<span class="green" id="greentxt">Green </span><span id="greenexp">letters means that letter is in the word and in the correct position.</span></br>
+<span class="yellow" id="yellowtxt">Yellow </span><span id="yellowexp">letters mean that the letter is in the word but <b>not</b> in the correct position.</span></br>
+<span id="tooeasy">If you find this too easy, try </span><span class="red" onclick="challenge()" id="redtxt"><b>CHALLENGE</b></span><span id="challengemode"> mode!</span>
+</div>
+<div style="display:flex;justify-content:flex-end;align-items:flex-end;", class="smalltxt", id="versionNumber">[[versionNumber]]</div>
+<script src="wordlist-wordle.js"></script>
+<script>
+/* Just letting you know, the code here is appalling. i dont understand for loops very well, and there is a very big
+if statement in my horrible code.
+
+Dont worry. i do plan on cleaning this up. */
+const correctWord = wordList[Math.floor(Math.random()*wordList.length)].toUpperCase();;
+var mode = "regular";
+var shockSecret = 0;
+var gameStarted = 0;
+var gameWon = 0;
+var numberofGuesses = 6;
+var guessesUsed = 0;
+var guessedWhiteWords = [];
+document.body.onkeyup = function(e){
+    if(e.key == ' ' && gameWon == 0){
+        console.log("cheating aint cool my guy. dont do it. i mean im not gonna stop you tho.");
+        press.innerHTML = "";
+        gameStarted = 1;
+        if (numberofGuesses >= 1){
+            guess = prompt("Guess a 5 letter word!");
+            guess = guess.toUpperCase();
+            numberofGuesses -= 1;
+            guessesUsed += 1;
+            if (numberofGuesses != 1){
+                guesses.innerHTML = `You have ${numberofGuesses} attempts left!`;
+            } else {
+                guesses.innerHTML = `You have 1 attempt left!`;
+            }
+            
+            guessword(guess);
+        }
+        if (numberofGuesses <= 0){
+            guesses.innerHTML = `Game over! Click reload to replay.`;
+            alert(`You've run out of attempts! The word was \"${correctWord}\"!`);
+        }
+    }
+}
+
+function updateVersionNumber(){
+    if (beta == true){
+        versionNumber.innerHTML = `v${version} <div class="red"><i><b>(BETA)</b></i></div>`;
+    } else if (newupdatepreview == true){
+        versionNumber.innerHTML = `v${version} <a href=http://www.asteristired.com/wordle/patch-1.4.html><b><u>(BETA TEST)</u></b></a>`;
+    } else {
+        versionNumber.innerHTML = `v${version}`;
+    }
+}
+function victory(){
+    var goodgame = niceMsg[Math.floor(Math.random()*niceMsg.length)]
+    guesses.innerHTML = `${goodgame} you won in ${guessesUsed} attempts!`
+    alert(`${goodgame} you won in ${guessesUsed} attempts!`)
+    gameWon = 1;
+
+}
+function addWhite(letter){
+    if (guessedWhiteWords.includes(letter) == false){
+        guessedWhiteWords += letter
+    }
+    extraletters.innerHTML = `White letters: ${guessedWhiteWords}`
+}
+function guessword(word){;
+    guessedWord = word.split("");
+    wordtoGuess = correctWord.split("");
+    if (guessedWord.length != 5){
+        alert("The word needs to be 5 letters long!")
+        guessedWord = ["E","R","R","O","R"]
+        guesses.innerHTML = `You have ${numberofGuesses} attempts left!`
+    }
+    l0.style.color = "white";
+    l1.style.color = "white";
+    l2.style.color = "white";
+    l3.style.color = "white";
+    l4.style.color = "white";
+    /* set to word */
+    l0.innerHTML = guessedWord[0]
+    l1.innerHTML = guessedWord[1]
+    l2.innerHTML = guessedWord[2]
+    l3.innerHTML = guessedWord[3]
+    l4.innerHTML = guessedWord[4]
+    // set words to green.
+    var greenWords = []
+    if (guessedWord[0] == wordtoGuess[0]){
+        if (mode == "challenge"){
+            l0.style.color = "#cf3b3b"
+        } else {
+            l0.style.color = "#538d4e"
+        }
+    } if (guessedWord[1] == wordtoGuess[1]){
+        if (mode == "challenge"){
+            l1.style.color = "#cf3b3b"
+        } else {
+            l1.style.color = "#538d4e"
+        }
+    } if (guessedWord[2] == wordtoGuess[2]){
+        if (mode == "challenge"){
+            l2.style.color = "#cf3b3b"
+        } else {
+            l2.style.color = "#538d4e"
+        }
+    } if (guessedWord[3] == wordtoGuess[3]){
+        if (mode == "challenge"){
+            l3.style.color = "#cf3b3b"
+        } else {
+            l3.style.color = "#538d4e"
+        }
+    } if (guessedWord[4] == wordtoGuess[4]){
+        if (mode == "challenge"){
+            l4.style.color = "#cf3b3b"
+        } else {
+            l4.style.color = "#538d4e"
+        }
+    }
+    // set words to yellow
+    var madeYellow = [];
+    if (wordtoGuess.includes(guessedWord[0]) && guessedWord[0] != wordtoGuess[0]){
+        if (mode == "challenge"){
+            l0.style.color = "#cf3b3b"
+        } else {
+            l0.style.color = "#b59f3b"
+        }
+        madeYellow.push(guessedWord[0])
+    } 
+    if (wordtoGuess.includes(guessedWord[1]) && guessedWord[1] != wordtoGuess[1] && madeYellow.includes(guessedWord[1]) == false){
+        if (mode == "challenge"){
+            l1.style.color = "#cf3b3b"
+        } else {
+            l1.style.color = "#b59f3b"
+        }
+        madeYellow.push(guessedWord[1])
+    } 
+    if (wordtoGuess.includes(guessedWord[2]) && guessedWord[2] != wordtoGuess[2] && madeYellow.includes(guessedWord[2]) == false){
+        if (mode == "challenge"){
+            l2.style.color = "#cf3b3b"
+        } else {
+            l2.style.color = "#b59f3b"
+        }
+        madeYellow.push(guessedWord[2])
+    } 
+    if (wordtoGuess.includes(guessedWord[3]) && guessedWord[3] != wordtoGuess[3] && madeYellow.includes(guessedWord[3]) == false){
+        if (mode == "challenge"){
+            l3.style.color = "#cf3b3b"
+        } else {
+            l3.style.color = "#b59f3b"
+        }
+        madeYellow.push(guessedWord[3])
+    } 
+    if (wordtoGuess.includes(guessedWord[4]) && guessedWord[4] != wordtoGuess[4] && madeYellow.includes(guessedWord[4]) == false){
+        if (mode == "challenge"){
+            l4.style.color = "#cf3b3b"
+        } else {
+            l4.style.color = "#b59f3b"
+        }
+        madeYellow.push(guessedWord[4])
+    }
+
+    // add word to guesses. 
+    prevguess.innerHTML += `<span style="color:${l0.style.color}">${guessedWord[0]} </span>`;
+    prevguess.innerHTML += `<span style="color:${l1.style.color}">${guessedWord[1]} </span>`;
+    prevguess.innerHTML += `<span style="color:${l2.style.color}">${guessedWord[2]} </span>`;
+    prevguess.innerHTML += `<span style="color:${l3.style.color}">${guessedWord[3]} </span>`;
+    prevguess.innerHTML += `<span style="color:${l4.style.color}">${guessedWord[4]}</span></br>`;
+
+    // check for victory
+
+    if (word === correctWord){
+        // yay you win
+        victory()
+    }
+
+    // assign white letters
+
+    if (l0.style.color == "white"){addWhite(l0.innerHTML)}
+    if (l1.style.color == "white"){addWhite(l1.innerHTML)}
+    if (l2.style.color == "white"){addWhite(l2.innerHTML)}
+    if (l3.style.color == "white"){addWhite(l3.innerHTML)}
+    if (l4.style.color == "white"){addWhite(l4.innerHTML)}
+}
+
+function challenge(){
+    if (gameStarted == 0){
+        console.log("challenge clicked")
+        mode = "challenge";
+        numberofGuesses = 12;
+        L.className = "red";
+        E.className = "red";
+        secondtxt.innerHTML = "CHALLENGE"
+        secondtxt.style.color = "#cf3b3b"
+        intro.innerHTML = "Welcome to challenge mode, you have been given 6 extra attempts to help you. all colors have been replaced with red!";
+        greentxt.className = "red";
+        greentxt.innerHTML = "Red "
+        greenexp.innerHTML = "text may mean that the letter is in the correct position."
+        yellowtxt.className = "red";
+        yellowtxt.innerHTML = "Red "
+        yellowexp.innerHTML = "text may also mean that the letter is in the incorrect position. it could mean either one!"
+        redtxt.innerHTML = ""
+        challengemode.innerHTML = ""
+        tooeasy.innerHTML = ""
+        guesses.innerHTML = `You have ${numberofGuesses} attempts left!`
+        alert("Challenge mode has been activated! have fun :)");
+    } else {
+        alert("Click challenge before you start the game!");
+    }
+}
+
+var typedWord = "";
+window.addEventListener('keypress', function(e){
+  var c = String.fromCharCode(e.keyCode);
+  typedWord += c.toLowerCase();
+  if(typedWord.length > 5) typedWord = typedWord.slice(1);
+  if(typedWord == 'debug'){
+        console.log("test");
+        guesses.innerHTML = `Answer: ${correctWord}`;
+        l0.innerHTML = "C";
+        l1.innerHTML = "H";
+        l2.innerHTML = "E";
+        l3.innerHTML = "A";
+        l4.innerHTML = "T";
+  }
+});
+updateVersionNumber()
+</script>
+</html>

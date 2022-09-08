@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<title>Wordle Clone</title>
+<script>
+var version = 2.0;
+var beta = true;
+var newupdatepreview = false;
+var lightmode = false;
+</script>
+<style>
+body {
+    background-color: rgb(36, 36, 36);
+    line-height: 1.2;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.sharebutton {
+    background-color: rgb(71, 218, 93);
+    height: 75px;
+    border-radius: 20px;
+    border-color: black;
+    border-width: 10px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+
+}
+
+#title {
+    padding: 200px, 0;
+    font-family: sans-serif;
+    color: rgb(255, 255, 255);
+    font-size: 300%;
+    text-align: center;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+#gametxt {
+    padding: 200px, 0;
+    font-family: sans-serif;
+    color: rgb(255, 255, 255);
+    font-size: 400%;
+    text-align: center;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+p {
+    padding: 500px,0;
+    font-family: sans-serif;
+    color: white;
+    font-size: 120%;
+    text-align: center;
+
+}
+
+.yellow {
+    width: 75px;
+    height: 75px;
+    border-radius: 10px;
+    border-color: gray;
+    background-color: #b59f3b;
+    display: inline-block;
+    text-align: center;
+    color: white;
+    vertical-align: top;
+}
+.green {
+    width: 75px;
+    height: 75px;
+    border-radius: 10px;
+    border-color: gray;
+    background-color: #538d4e;;
+    display: inline-block;
+    text-align: center;
+    color: white;
+    vertical-align: top;
+}
+.red {
+    width: 75px;
+    height: 75px;
+    border-radius: 10px;
+    border-color: gray;
+    background-color: #cf3b3b;
+    display: inline-block;
+    text-align: center;
+    color: white;
+    vertical-align: top;
+}
+
+.empty {
+    width: 75px;
+    height: 75px;
+    border-radius: 10px;
+    border-color: gray;
+    background-color: rgb(63, 63, 63);
+    display: inline-block;
+    text-align: center;
+    color: white;
+    vertical-align: top;
+}
+.emptylight {
+    width: 75px;
+    height: 75px;
+    border-radius: 10px;
+    border-color: gray;
+    background-color: rgb(200, 200, 200);
+    display: inline-block;
+    text-align: center;
+    color: rgb(0, 0, 0);
+    vertical-align: top;
+}
+
+.lightwindow {
+    width: 600px;
+    height: 600px;
+    border-radius: 10px;
+    border-color: gray;
+    background-color: rgb(236, 236, 236);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgb(0, 0, 0);
+    position: absolute;
+    z-index: 10;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.darkwindow {
+    width: 600px;
+    height: 600px;
+    border-radius: 10px;
+    border-color: gray;
+    background-color: rgb(45, 45, 45);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgb(255, 255, 255);
+    position: absolute;
+    z-index: 10;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+
+.greendot {
+  height: 25px;
+  width: 25px;
+  background-color: rgb(72, 248, 63);
+  border-radius: 50%;
+  display: inline-block;
+}
+.challengedot {
+  height: 25px;
+  width: 25px;
+  background-color: rgb(248, 63, 63);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+</style>
+<body id="background">
+<b>
+<span id="toptray"><span class="greendot" id="modeDot" onclick="switchmode()"></span></span>
+<p style="font-size: 100%; display: none;" id="saveinfo"><i>Accessing Save File...</i></p>
+<div class="darkwindow" style="display:none" id="displaywindow">
+<p style="font-size: 300%;color: black;" id="youwin"><b>YOU&nbsp;WON!</b></p>
+<p style="font-size: 250%;color: black;" id="attemptstaken"><b>[[attemptstaken]]</b></p>
+<p style="font-size: 200%;color: black;text-align: left;" id="totalwins">Wins: [[wins]]</p>
+<p style="font-size: 200%;color: black;text-align: left;" id="totallosses">Losses: [[losses]]</p>
+<p style="font-size: 200%;color: black;text-align: left;" id="averageattempts">Average Attempts: [[averageattempts]]</p>
+<span class="sharebutton"><p style="font-size: 150%;color: black;">Click to share results!</p></span>
+</div>
+<div id="title">
+<span id="titletext">W O R D L E&nbsp;&nbsp;C L O N E</span>
+</b><br><br>
+<h6 id="guesses" style="display:none">You have 6 attempts left!</h6>
+</div>
+<b>
+<div id="gametxt" onclick="guessAWord()">
+</b>
+</div>
+<b>
+</b>
+
+<!-- Bottom Text -->
+<p id="debugtext"></p>
+
+<script src="wordlist-wordle.js"></script><script src="save-to-cookies.js"></script>
+</audio>
+<script>
+/* told you */
+
+// get a word from the list of words.
+allwordlist = wordList
+var correctWord = allwordlist[Math.floor(Math.random()*allwordlist.length)].toUpperCase();;
+//correctWord = eightLetterWords[Math.floor(Math.random()*eightLetterWords.length)].toUpperCase();; // this is just for 8 letter test mode.
+// set variables
+var mode = "regular";
+var shockSecret = 0;
+var gameStarted = 0;
+var gameWon = 0;
+var numberofGuesses = 200;
+var guessesUsed = 0;
+var wordLength = 5; // the length of the word.
+var guessedWhiteWords = [];
+var whatsguessed;
+var createWhatsGuessed;
+var debugon = false;
+var currentrow = 0
+var row = 0;
+var allowedLetters = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
+var stats = {"wins":0,"losses":0,"totalAttempts":0}
+var challengestats = {"wins":0,"losses":0,"totalAttempts":0}
+
+alert("This is a testfire! There is a very very high chance that this might not be playable!!")
+//load savedata
+loaddata()
+
+if (lightmode == true){background.style = "background-color: white";}
+if (lightmode == true){titletext.style = "color: black";}
+
+for (let i = 0; i < numberofGuesses; i++){
+    for (let j = 0; j < wordLength; j++){
+        if(lightmode == false){gametxt.innerHTML += `<span id="r${row}l${j}" class="empty"></span> `}
+        else {gametxt.innerHTML += `<span id="r${row}l${j}" class="emptylight"></span> `}
+    }
+    row += 1
+    gametxt.innerHTML += "<br>"
+}
+var generatedwin = false;
+document.body.onkeyup = function(e){
+    if(allowedLetters.includes(e.key.toLowerCase()) && gameWon == 0){
+        addToWord(e.key)
+    } else if (e.key == "Enter" && lettersforguess.length == wordLength){
+        guessword(lettersforguess.join("").toUpperCase())
+        letterAdded = 0;
+        lettersforguess = [];
+    } else if (e.key == "Backspace" && lettersforguess.length > 0){
+        addToWord("none",true)
+    } else if (gameWon >= 1 && e.key == " "){
+        if (generatedwin == false){
+            showstats()
+        } else if (displaywindow.style.display !== "none"){
+            displaywindow.style.display = "none"
+        } else {displaywindow.style.display = "inline-block"}
+    }
+}
+let letterAdded = 0;
+var lettersforguess = [];
+function addToWord(letter,remove=false){
+    if (letterAdded < wordLength && remove == false){
+        lettersforguess.push(letter)
+        document.getElementById(`r${guessesUsed}l${letterAdded}`).innerHTML = `<b>${letter.toUpperCase()}</b>`
+        letterAdded += 1
+    } else if (remove == true){
+        letterAdded -= 1
+        document.getElementById(`r${guessesUsed}l${letterAdded}`).innerHTML = " "
+        lettersforguess.pop()
+    }
+}
+
+function refresh(){
+    guessAWord()
+}
+
+function switchmode(){if (mode == "regular" && gameStarted == 0){mode = "challenge";modeDot.className = "challengedot"} else if (gameStarted == 0){mode = "regular";modeDot.className = "greendot"}}
+function guessAWord(){
+        console.log("cheating aint cool my guy. dont do it. i mean im not gonna stop you tho.");
+        if (numberofGuesses >= 1){
+            guess = prompt(`Guess a ${wordLength} letter word!`);
+            guess = guess.toUpperCase();
+            guessword(guess);
+        }
+}
+
+function showstats(win=true){
+    generatedwin = true
+    nicephrase = niceMsg[Math.floor(Math.random() * niceMsg.length)];
+    if (win == false){youwin.innerHTML = "GOOD TRY!";gameWon = 2} else {youwin.innerHTML = nicephrase.toUpperCase()}
+    if (win == true){attemptstaken.innerHTML = `You took ${guessesUsed} attempts!`} else {attemptstaken.innerHTML = `The word was ${correctWord}!`}
+    if (mode == "regular"){
+        if (win == true){stats["wins"] += 1;stats["totalAttempts"] += guessesUsed} else {stats["losses"] += 1;stats["totalAttempts"] += guessesUsed}
+        totalwins.innerHTML = `&emsp;Wins: ${stats["wins"]}`
+        totallosses.innerHTML = `&emsp;Losses: ${stats["losses"]}`
+        averageattempts.innerHTML = `&emsp;Average Attempts: ${stats["totalAttempts"] / (stats["losses"] + stats["wins"])}`
+    } else {
+        if (win == true){challengestats["wins"] += 1;challengestats["totalAttempts"] += guessesUsed} else {challengestats["losses"] += 1;challengestats["totalAttempts"] += guessesUsed}
+        totalwins.innerHTML = `&emsp;<b style="color:#cf3b3b">CHALLENGE </b>Wins: ${challengestats["wins"]}`
+        totallosses.innerHTML = `&emsp;<b style="color:#cf3b3b">CHALLENGE </b>Losses: ${challengestats["losses"]}`
+        averageattempts.innerHTML = `&emsp;<b style="color:#cf3b3b">CHALLENGE </b>AVG Attempts: ${challengestats["totalAttempts"] / (challengestats["losses"] + challengestats["wins"])}`
+    }
+    if (lightmode == false){
+        displaywindow.className = "darkwindow";
+        youwin.style.color = "white";
+        attemptstaken.style.color = "white";
+        totalwins.style.color = "white";
+        totallosses.style.color = "white";
+        averageattempts.style.color = "white";
+    } else {displaywindow.className = "lightwindow"}
+    displaywindow.style.display = "inline-block"
+    savedata()
+}
+
+function addWhite(letter){
+    if (guessedWhiteWords.includes(letter) == false){
+        guessedWhiteWords += letter
+    }
+    extraletters.innerHTML = `White letters: ${guessedWhiteWords}`
+}
+function guessword(word){
+    numberofGuesses -= 1
+    gameStarted = 1;
+    currentrow = guessesUsed
+    guessesUsed += 1;
+    // this is where basically all of the rework is
+    guessedWord = word.split("");
+    wordtoGuess = correctWord.split("");
+    if (guessedWord.length != wordLength){
+        alert(`The word needs to be ${wordLength} letters long!`)
+        guessedWord = []
+        for (let i = 0; i < wordLength; i++) { // made it a for loop so its more flexible
+                guessedWord.push(" ")
+        }
+        numberofGuesses += 1
+        guessesUsed -= 1   
+    }
+    for (let i = 0; i < wordLength; i++) {
+        letterName = `r${currentrow}l${i}`
+        getLetter = document.getElementById(letterName)
+        getLetter.className = "empty";
+    }
+    /* set to word */
+    for (let i = 0; i < wordLength; i++) {
+        letterName = `r${currentrow}l${i}`
+        getLetter = document.getElementById(letterName)
+        getLetter.innerHTML = `<b>${guessedWord[i]}</b>`
+    }
+
+    var madeYellow = [];
+    for (let i = 0; i < wordLength; i++) {
+        letterName = `r${currentrow}l${i}`
+        getLetter = document.getElementById(letterName)
+        if (wordtoGuess.includes(guessedWord[i]) && guessedWord[i] != wordtoGuess[i] && madeYellow.includes(guessedWord[i]) == false){
+            if (mode == "challenge"){
+                getLetter.className = "red"
+            } else {
+                getLetter.className = "yellow"
+            }
+        madeYellow.push(guessedWord[1])
+        }
+    }
+
+    // set words to green.
+    for (let i = 0; i < wordLength; i++) {
+        letterName =`r${currentrow}l${i}`
+        getLetter = document.getElementById(letterName)
+        if (guessedWord[i] == wordtoGuess[i] ){
+            if (mode == "challenge"){
+                getLetter.className = "red"
+            } else {
+                getLetter.className = "green"
+            }
+        }
+    }
+    
+
+    // refresh debug mode
+
+    if (debugon == true){
+        debugmode()
+    }
+
+    // check for victory
+
+    if (word === correctWord){
+        // yay you win
+        gameWon = 1;
+        setTimeout(() => {showstats(true)}, 1500);
+    } else if (numberofGuesses <= 0){
+        showstats(false)
+    }
+}
+function challenge(){
+    if (gameStarted == 0){
+        console.log("challenge clicked")
+        mode = "challenge";
+        alert("Challenge mode has been activated! have fun :)");
+    } else {
+        alert("Click challenge before you start the game!");
+    }
+}
+function debugmode(){
+    debugtext.innerHTML = `Guesses Used/Current Row: <b><span style="color:#b59f3b">${guessesUsed}/${currentrow}</span></b> Answer: <span style="color:#538d4e">${correctWord.toUpperCase()}</span> Guesses Left: <span>${numberofGuesses}</span>`
+}
+
+var typedWord = "";
+window.addEventListener('keypress', function(e){
+  var c = String.fromCharCode(e.keyCode);
+  typedWord += c.toLowerCase();
+  if(typedWord.length > 8) typedWord = typedWord.slice(1);
+  if(typedWord == 'debugger'){
+        debugon = true;
+        debugmode();
+  }
+});
+</script>
+</body>
+</html>

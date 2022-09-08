@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<html>
+<title>This page doesnt exist...</title>
+<script>
+window.location.replace("http://www.asteristired.com");
+</script>
+</html>

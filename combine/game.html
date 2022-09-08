@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<style>
+.title {
+    font-family: sans-serif;
+    text-align: center;
+    font-size: 200%;
+}
+html {font-family: sans-serif;}
+p,a {
+    text-align: center;
+    font-size: 120%;
+}
+div {
+    font-family: sans-serif;
+    font-size: 120%;
+    margin: auto;
+
+}
+.bigBox {
+    width: 75px;
+    height: 75px;
+    border: 5px solid black;
+}
+
+.element {
+    border-radius: 25px;
+    text-align: center;
+    font-size: 150%;
+    font-family: sans-serif;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+</style>
+<script src="combinations.js"></script>
+<script src="elementpackmanager.js"></script>
+<p style="font-size: 100%" id="packsandCredits"></p>
+<div class="title"><h1>Combine</h1></div>
+<div><b><p style="font-size: 200%" id="equationshow">? + ?</p></b></div>
+<div id="elementNest"></div>
+<script>
+var discoveredElements = []
+var elemEquation = {"element1":"?","element2":"?"}
+
+function grantElement(elementName){
+    discoveredElements.push(elementName)
+    document.getElementById(allElements[elementName]["info"]["nest"]).innerHTML += `<span id="${elementName}Box" class="element" style="background-color: ${allElements[elementName]["info"]["color"]};" onclick="setElemEquation('${elementName}')">${allElements[elementName]["info"]["name"]}</span>`
+}
+function makeElementNest(name){
+    elementNest.innerHTML += `<div id="${name}"></div><br>`
+}
+
+function setElemEquation(element){
+    if (elemEquation["element1"] === "?"){
+        elemEquation["element1"] = element;
+    } else if (elemEquation["element2"] === "?"){
+        elemEquation["element2"] = element;
+    }
+    equationshow.innerHTML = `${elemEquation["element1"]} + ${elemEquation["element2"]}`
+    if (elemEquation["element1"] !== "?" && elemEquation["element2"] !== "?"){
+        combineElements(elemEquation["element1"],elemEquation["element2"]);
+        equationshow.innerHTML = `${elemEquation["element1"]} + ${elemEquation["element2"]}`
+        elemEquation["element1"] = "?"
+        elemEquation["element2"] = "?"
+    }
+    
+}
+
+function combineElements(element1,element2){
+    if (discoveredElements.includes(allElements[element1]["crafting"][element2]) === false){
+        try {
+            grantElement(allElements[element1]["crafting"][element2])
+            //alert(`You just discovered ${(allElements[allElements[element1]["crafting"][element2]]["info"]["name"]).toLowerCase()}!`)
+        } catch (error) {
+            console.error("Could not find element. Going to presume that it doesnt exist.")
+            //alert("These elements dont combine together!")
+        }
+    } else {
+        //alert("You have already discovered this element!")
+    }
+}
+
+makeElementNest("fireNest")
+makeElementNest("waterNest")
+makeElementNest("earthNest")
+makeElementNest("airNest")
+makeElementNest("lifeNest")
+grantElement("fire")
+grantElement("water")
+grantElement("earth")
+grantElement("air")
+</script>
+</html>
