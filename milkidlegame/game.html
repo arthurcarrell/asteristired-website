@@ -133,21 +133,28 @@ var dayofMonth = new Date().getDate();
 var blueberrymat = Math.random() < 0.5;
 var season;
 
-function shorten(value,shortfrom=1000) { // not my code
-    var newValue = value;
-    if (value >= shortfrom) {
-        var suffixes = ["", "K", "M", "B","T","Qa","Qi","Sx","Sp","Oc","No","De","Un","Du","Tr","Qu","Qua"];
-        var suffixNum = Math.floor( (""+value).length/4 );
-        var shortValue = '';
-        for (var precision = 2; precision >= 1; precision--) {
-            shortValue = parseFloat( (suffixNum != 0 ? (value / Math.pow(1000,suffixNum) ) : value).toPrecision(precision));
-            var dotLessShortValue = (shortValue + '').replace(/[^a-zA-Z 0-9]+/g,'');
-            if (dotLessShortValue.length <= 2) { break; }
-        }
-        if (shortValue % 1 != 0)  shortValue = shortValue.toFixed(1);
-        newValue = shortValue+suffixes[suffixNum];
+function shorten (number, config = {absolute: false, factor: 2, lowestint: 1000}) { // from https://dev.to/daxsoft/javascript-abbreviate-numbers-2l7m with a few edits from me
+    if (typeof config !== 'object') config = {}
+    if (!config.hasOwnProperty('lowestint')) config.lowestint = 0
+    if (number >= config.lowestint || number >= Infinity){
+        if (!config.hasOwnProperty('factor')) config.factor = 2
+        if (!config.hasOwnProperty('absolute')) config.absolute = true
+        if (!config.hasOwnProperty('unit'))
+            config.unit = ["", "K", "M", "B","T","Qa","Qi","Sx","Sp","Oc","No","De","Un","Du","Tr","Qu","Qua"]
+        if (!config.hasOwnProperty('numeric')) config.numeric = false
+        let value = String(number).replace(/(\.|\)|\(|\,)/g, '')
+        let length = value.length - 1
+        const unit_index = ~~(length / 3)
+        value = eval(
+            `parseFloat(${value} / 1e${unit_index * 3}).toFixed(${config.factor})`
+        )
+    
+
+        if (!!config.absolute) value = value.replace(/\.(\d+)$/, '')
+        return !!config.numeric ? +value : `${value}${config.unit[unit_index]}`
+    } else {
+        return number
     }
-    return newValue;
 }
 
 function monthDiff(dateFrom, dateTo) { // not my code
@@ -221,7 +228,7 @@ milkduper = new building("milkduper",19200,"Milk Duplicator","milk-bottle.png")
 
 function grantmilk(amount){
     milk += amount;
-    milkamount.innerHTML = `MILK: ${shorten(Math.round(milk),1000000)}`
+    milkamount.innerHTML = `MILK: ${shorten(Math.round(milk))}`
 
 }
 function buildingeffect(name, amount, bypass=false){
