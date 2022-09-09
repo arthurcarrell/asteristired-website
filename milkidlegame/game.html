@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <script src="allItems.js"></script>
+<script src="itemcontrol.js"></script>
 <style>
 html {
     font-size: 100;
@@ -87,7 +88,7 @@ html {
 <img src="textures/cow.gif">
 <h3 id="itCowhappy">Cow Happiness: 10/10</h3>
 <p>Auto buy wheat when number reaches value of:</p><input type="number" min="0" max="9" id="autobuycow"><br>
-<img src="textures/wheat.png" width="50" height="50" onclick="buycowhappy(1,2500)"><p>Buy Wheat - Increase Happiness by 1. (2500M)</p>
+<img src="textures/wheat.png" width="50" height="50" onclick="buycowhappy(1,750)"><p>Buy Wheat - Increase Happiness by 1. (2500M)</p>
 </div>
 <div id="mineinteract" style="display:block">
 <p id="mineelement"></p>
@@ -136,7 +137,7 @@ function shorten(value,shortfrom=1000) { // not my code
     var newValue = value;
     if (value >= shortfrom) {
         var suffixes = ["", "K", "M", "B","T","Qa","Qi","Sx","Sp","Oc","No","De","Un","Du","Tr","Qu","Qua"];
-        var suffixNum = Math.floor( (""+value).length/3 );
+        var suffixNum = Math.floor( (""+value).length/4 );
         var shortValue = '';
         for (var precision = 2; precision >= 1; precision--) {
             shortValue = parseFloat( (suffixNum != 0 ? (value / Math.pow(1000,suffixNum) ) : value).toPrecision(precision));
@@ -210,64 +211,7 @@ function playtheme(){
     }
 }
 
-function showitemText(item){
-    item = youritems[item]
-    itemText.innerHTML = `<h3 class="${item["iteminfo"]["rarity"]}">${item["iteminfo"]["name"]}</h3><br>`
-    if (item["iteminfo"]["on-click"] !== "empty"){itemText.innerHTML += `<p class="${item["iteminfo"]["rarity"]}"><b>ON CLICK:</b> ${item["text"]["clickability"]["name"]}</p><p class="infoTextColor">${item["text"]["clickability"]["description"]}</p>`}
-    if (item["iteminfo"]["on-tick"] !== "empty"){itemText.innerHTML += `<p class="${item["iteminfo"]["rarity"]}"><b>PASSIVE:</b> ${item["text"]["tickability"]["name"]}</p><p class="infoTextColor">${item["text"]["tickability"]["description"]}</p>`}
-    itemText.innerHTML += `<br><h3 class="${item["iteminfo"]["rarity"]}">${item["iteminfo"]["rarity"]}</h3>`
-    if (item["iteminfo"]["tags"].includes("UPGRADED")){itemText.innerHTML += '<p class="infoTextColor"><i>(Upgraded)</i></p>';}
-}
 
-function grantitem(item){
-    if (allitems.hasOwnProperty(item) === false){item = "null"}
-    if (youritems.hasOwnProperty(item) === false){
-        youritems[item] = allitems[item]
-        items.innerHTML += `<img src="textures/${youritems[item]["iteminfo"]["texture"]}" height=50 width=50 onmouseover="showitemText('${item}')" onclick="useitem('${item}')" class="item">`;
-    } else if (youritems[item]["iteminfo"]["amount"] >= youritems[item]["iteminfo"]["maxamount"]) {
-       grantmilk(youritems["iteminfo"]["sellamount"])
-    } else {
-        youritems[item]["iteminfo"]["amount"] += 1
-    }
-    
-}
-
-function upgradefeature(item){
-    if (item === "cowbell"){youritems[item]["iteminfo"]["on-tick"] = "cowbellUpgrade";}
-    if (item === "springitem"){youritems[item]["iteminfo"]["on-tick"] = "springitemUpgrade";}
-    if (item === "summeritem"){youritems[item]["iteminfo"]["on-tick"] = "summeritemUpgrade";}
-    if (item === "fallitem"){youritems[item]["iteminfo"]["on-tick"] = "fallitemUpgrade";}
-    if (item === "winteritem"){youritems[item]["iteminfo"]["on-tick"] = "winteritemUpgrade";}
-    if (item === "voiditem"){youritems[item]["iteminfo"]["on-tick"] = "voiditemUpgrade";}
-}
-function upgradeitem(item){
-    if (youritems.hasOwnProperty(item)){ 
-        let rarity = youritems[item]["iteminfo"]["rarity"]
-        if (rarity == "COMMON"){youritems[item]["iteminfo"]["rarity"] = "UNCOMMON"} else
-        if (rarity == "UNCOMMON"){youritems[item]["iteminfo"]["rarity"] = "RARE"} else
-        if (rarity == "RARE"){youritems[item]["iteminfo"]["rarity"] = "EPIC"} else
-        if (rarity == "EPIC"){youritems[item]["iteminfo"]["rarity"] = "LEGENDARY"} else
-        if (rarity == "LEGENDARY"){youritems[item]["iteminfo"]["rarity"] = "MYTHIC"} else
-        if (rarity == "MYTHIC"){youritems[item]["iteminfo"]["rarity"] = "DIVINE"}
-        youritems[item]["iteminfo"]["tags"].push("UPGRADED");
-        upgradefeature(item)
-    }
-}
-function useitem(item){
-    if (youritems[item]["iteminfo"]["manause"] <= manaAmount){
-        manaAmount -= youritems[item]["iteminfo"]["manause"]
-        clickUse = youritems[item]["iteminfo"]["on-click"]
-        if (clickUse == "cowbellClick"){
-            grantmilk((cow.amount * (0.1 * (Math.ceil(Cowhappy) / 5))) * 600000)
-        } else if (clickUse == "switchSpring"){setSeason("Spring")}
-        else if (clickUse == "switchSummer"){setSeason("Summer")}
-        else if (clickUse == "switchFall"){setSeason("Fall")}
-        else if (clickUse == "switchWinter"){setSeason("Winter")}
-        else if (clickUse == "switchVoid"){setSeason("Void")}
-    } else {
-        alert("You do not have enough mana for this!!")
-    }
-}
 cow = new building("cow",15,"Cow","cow.gif")
 farm = new building("farm",75,"Dairy Farm","farm.gif")
 mine = new building("mine",300,"Milk Mine","pickaxe.png")
@@ -312,7 +256,7 @@ function buycowhappy(give,cost){
         milk -= cost
         changecowhappy(give)
     } else {
-        alert("You cannot afford this!!")
+        alert("You cannot afford to increase your cows happiness!")
     }
 }
 function unlockbuilding(name){
