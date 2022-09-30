@@ -165,7 +165,7 @@ function monthDiff(dateFrom, dateTo) { // not my code
 var year = monthDiff(new Date(2022,7),new Date(new Date().getFullYear(),new Date().getMonth()))
 
 class building {
-    constructor(name,baseprice,visiblename,texture="placeholder.png"){
+    constructor(name,baseprice,givemilk,visiblename,texture="placeholder.png"){
         this.name = name;
         this.baseprice = baseprice;
         this.visiblename = visiblename;
@@ -173,6 +173,7 @@ class building {
         this.price = this.baseprice;
         this.displayelement = `${this.name}amount`;
         this.texture = texture;
+        this.givemilk = givemilk;
         showbuilding.innerHTML += `<div id="show${this.name}"></div><br>`
 
     }
@@ -219,12 +220,12 @@ function playtheme(){
 }
 
 
-cow = new building("cow",15,"Cow","cow.gif")
-farm = new building("farm",75,"Dairy Farm","farm.gif")
-mine = new building("mine",300,"Milk Mine","pickaxe.png")
-alchemystation = new building("alchemystation",1200,"Alchemy Station","potion.png")
-matterReform = new building("matterReform",4800,"Matter Reformer","matterReform.png")
-milkduper = new building("milkduper",19200,"Milk Duplicator","milk-bottle.png")
+cow = new building("cow",15,(0.1 * (Math.ceil(Cowhappy) / 5)),"Cow","cow.gif")
+farm = new building("farm",75,0.5,"Dairy Farm","farm.gif")
+mine = new building("mine",300,0.8,"Milk Mine","pickaxe.png")
+alchemystation = new building("alchemystation",1200,1,"Alchemy Station","potion.png")
+matterReform = new building("matterReform",4800,1.5,"Matter Reformer","matterReform.png")
+milkduper = new building("milkduper",19200,2.5,"Milk Duplicator","milk-bottle.png")
 
 function grantmilk(amount){
     milk += amount;
@@ -266,10 +267,17 @@ function buycowhappy(give,cost){
         alert("You cannot afford to increase your cows happiness!")
     }
 }
+
+function dropdown(name){
+    if (document.getElementById(`${name.name}dropbutton`).innerHTML == "⮞"){
+        document.getElementById(`${name.name}dropbutton`).innerHTML = "⮟"
+        document.getElementById(`${name.name}drop`).innerHTML = "<br>"
+    } else {document.getElementById(`${name.name}dropbutton`).innerHTML = "⮞";document.getElementById(`${name.name}drop`).innerHTML = " "}
+}
 function unlockbuilding(name){
     buildingsunlocked += 1;
     unlockedbuildings.innerHTML = `Buildings Unlocked ${buildingsunlocked}/7`
-    buildingdisplay.innerHTML += `<img src=textures/${name.texture} width=20 height=20><span><button onclick="buybuilding(${name.name},1)">Buy A ${name.visiblename}</button></span><span id="${name.name}amount">[[${name.name}amount]]</span><br><br>`;
+    buildingdisplay.innerHTML += `<img src=textures/${name.texture} width=20 height=20><span><button onclick="buybuilding(${name.name},1)">Buy A ${name.visiblename}</button></span><span id="${name.name}amount">[[${name.name}amount]]</span> </span><span id="${name.name}dropbutton" onclick="dropdown(${name.name})">⮞</span><span id="${name.name}drop"></span><br><br>`;
     grantbuilding(name,0);
 }
 function init(){ // runs on startup

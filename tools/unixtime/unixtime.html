@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<style>
+body {
+    font-family: Helvetica;
+    font-size: 200%;
+    color: rgb(255, 255, 255);
+    background-color: rgb(29, 29, 29);
+    text-align: center;
+}
+</style>
+<br><br><br>
+<h1 id="unixnumber" style="font-size: 500%;">2</h1>
+<h2 style="font-size: 100%">Seconds since January 1st 1970.</h2>
+<b><span onclick="mode = 'b2'">Base 2 UNIX</span><span>&ensp;&ensp;</span><span onclick="mode = 'b10'">Base 10 UNIX</span><span>&ensp;&ensp;</span><span onclick="mode = 'b16'">Base 16 UNIX</span></b>
+<script>
+
+mode = "b10"
+window.setInterval(function(){
+    unixnum = (Math.floor(Date.now() / 1000))
+    if (mode == "b10"){unixnumber.innerHTML = unixnum; unixnumber.style = "font-size: 500%;"}
+    if (mode == "b2"){unixnumber.innerHTML = (unixnum >>> 0).toString(2) /* thanks stack overflow */;unixnumber.style = "font-size: 200%;"}
+    if (mode == "b16"){unixnumber.innerHTML = unixnum.toString(16).toUpperCase(); /* thanks stack overflow again */;unixnumber.style = "font-size: 500%;"}
+}, 0);
+</script>
