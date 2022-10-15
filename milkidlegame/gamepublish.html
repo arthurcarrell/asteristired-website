@@ -2,7 +2,6 @@
 <html>
 <script src="allItems.js"></script>
 <script src="itemcontrol.js"></script>
-<script src="savescript.js"></script>
 <style>
 html {
     font-size: 100;
@@ -60,7 +59,7 @@ html {
 </div>
 <div id="ajCenter" style="padding:30px;float:left;background-color: rgb(66, 66, 66);overflow-y:scroll;height: 700px;">
     <div id="shop">
-    <button id="savetxt" onclick="createsavev2()">Click to save</button>
+    <button id="savetxt" onclick="alert('Saving is annoying, not finished yet.')">Saving is currently disabled. Im working on it!</button>
     <button id="deletetxt" onclick="deletesave()">Click to delete save</button><br>
     <button id="playtxt" onclick="playtheme()">Play Current Theme!</button><br>
     <span>Background: </span>
@@ -69,25 +68,18 @@ html {
         <option value="berry">Berry</option>
         <option value="gold">GOLD</option>
     </select>
-    <div id="shop">
     <h1>SHOP</h1>
     <p id="unlockedbuildings" style="display: none;">[[unlockedbuildings]]</p>
     <p id="gameInfo"></p>
     <p>____________________________________________</p>
     <div id="buildingdisplay"><!-- This is where the buildings get generated --></div>
-    <div id="hintbuildings"><i>You may have to do some <b style="color: rgb(221, 98, 98)">research</b> to<br> unlock more buildings.</i></div>
-    </div>
-    <div id="patchnotes" style="display: none;">
-    <p><i>(This shows only the most recent patch...)</i></p>
-    <h1>1.1 - Storage Update</h1><br>
-    <p> - Data is now stored in localStorage</p>
-    <p> - Save data is now easier to read and looks better.</p>
-    </div>
+    <div id="hintbuildings"><i>More <b style="color: rgb(221, 98, 98)">buildings</b> are coming soon.</i></div>
     </div>
 </div>
 </div>
 <div id="ajRight" style="padding:30px;float:left;background-color: rgb(110, 110, 110);overflow-y:scroll;height: 700px;">
 <h1>Building Interactables:</h1>
+<p>Not in alpha version!</p>
 <div id="darkbackground">
 <span id="items"></span>
 <p id="itemText"></p>
@@ -123,6 +115,7 @@ html {
     <div id="cowinteract" style="display:none">HELLO THER</div>
     </div>
 <script>
+alert("This is a beta build, Not everything is finished. Saves from the base game will be carried over, but you cannot save.")
 // init variables
 var milk = 0;
 var advancements = ["Start"];
@@ -140,12 +133,6 @@ var youritems = {}
 var dayofMonth = new Date().getDate();
 var blueberrymat = Math.random() < 0.5;
 var season;
-var version = 1.1
-
-function showtab(){
-    getElementById("shop").style = "display: block;"
-    getElementById("").style = "display: block;"
-}
 
 function shorten (number, config = {absolute: false, factor: 2, lowestint: 1000}) { // from https://dev.to/daxsoft/javascript-abbreviate-numbers-2l7m with a few edits from me
     if (typeof config !== 'object') config = {}
@@ -188,6 +175,7 @@ class building {
         this.displayelement = `${this.name}amount`;
         this.texture = texture;
         this.givemilk = givemilk;
+        this.upgrades = []
         showbuilding.innerHTML += `<div id="show${this.name}"></div><br>`
 
     }
@@ -240,7 +228,6 @@ mine = new building("mine",300,0.8,"Milk Mine","pickaxe.png")
 alchemystation = new building("alchemystation",1200,1,"Alchemy Station","potion.png")
 matterReform = new building("matterReform",4800,1.5,"Matter Reformer","matterReform.png")
 milkduper = new building("milkduper",19200,2.5,"Milk Duplicator","milk-bottle.png")
-var allbuildings = [cow,farm,mine,alchemystation,matterReform,milkduper]
 
 function grantmilk(amount){
     milk += amount;
@@ -284,15 +271,15 @@ function buycowhappy(give,cost){
 }
 
 function dropdown(name){
-    if (document.getElementById(`${name.name}dropbutton`).innerHTML == "⮞" && name.amount > 0){
-        document.getElementById(`${name.name}dropbutton`).innerHTML = "⮟"
-        document.getElementById(`${name.name}drop`).innerHTML = `<br><br>Price: ${name.price}<br>${name.amount} ${name.visiblename}'s generating ${name.givemilk * name.amount} MPS`
-    } else {document.getElementById(`${name.name}dropbutton`).innerHTML = "⮞";document.getElementById(`${name.name}drop`).innerHTML = " "}
+    if (document.getElementById(`${name.name}dropbutton`).innerHTML == "&#10148;"){
+        document.getElementById(`${name.name}dropbutton`).innerHTML = "&#9660;"
+        document.getElementById(`${name.name}drop`).innerHTML = "<br>"
+    } else {document.getElementById(`${name.name}dropbutton`).innerHTML = "&#10148;";document.getElementById(`${name.name}drop`).innerHTML = " "}
 }
 function unlockbuilding(name){
     buildingsunlocked += 1;
     unlockedbuildings.innerHTML = `Buildings Unlocked ${buildingsunlocked}/7`
-    buildingdisplay.innerHTML += `<img src=textures/${name.texture} width=20 height=20><span><button onclick="buybuilding(${name.name},1)">Buy A ${name.visiblename}</button></span><span id="${name.name}amount">[[${name.name}amount]]</span> </span><span id="${name.name}dropbutton" onclick="dropdown(${name.name})">⮞</span><span id="${name.name}drop"></span><br><br>`;
+    buildingdisplay.innerHTML += `<img src=textures/${name.texture} width=20 height=20><span><button onclick="buybuilding(${name.name},1)">Buy A ${name.visiblename}</button></span><span id="${name.name}amount">[[${name.name}amount]]</span> </span><span id="${name.name}dropbutton" onclick="dropdown(${name.name})"></span><span id="${name.name}drop"></span><br><br>`;
     grantbuilding(name,0);
 }
 function init(){ // runs on startup
@@ -303,7 +290,7 @@ function init(){ // runs on startup
     unlockbuilding(alchemystation)
     unlockbuilding(matterReform)
     unlockbuilding(milkduper)
-    loadsavev2()
+    loadsave()
 }
 function changecowhappy(amount){
     Cowhappy += amount;
@@ -343,7 +330,7 @@ function gametick(amount=1){ //runs every 0.1 seconds
         if (saveTickTime >= 1){saveTickTime -= 1;} else {savetxt.innerHTML = "Click to save."}
         gameticks += 1;
         devGameTicks.innerHTML = `Game Ticks: ${gameticks}`
-        devLoadSave.innerHTML = `Save Data: ${savedata}`;
+        devLoadSave.innerHTML = `Save Data: ${savefile}`;
         devAdvancements.innerHTML = `Advancements: ${advancements}`
         setBackground(choosebackground.value)
     }
@@ -356,7 +343,85 @@ setInterval(function(){
 
 
 
+function createsave(){
+    savefile = ''
+    savefile += `${advancements}`
+    savefile += `/${milk}`
+    savefile += `/${cow.amount}`
+    savefile += `/${farm.amount}`
+    savefile += `/${mine.amount}`
+    savefile += `/${alchemystation.amount}`
+    savefile += `/${Cowhappy}`
+    savefile += `/${matterReform.amount}`
+    savefile += `/${milkduper.amount}`
+    console.log(savefile)
+    setCookie("savedata",savefile)
+    savedata = savefile;
+    saveTickTime = 50;
+}
+var typedWord = '';
+window.addEventListener('keypress', function(e){
+  var c = String.fromCharCode(e.keyCode);
+  typedWord += c.toLowerCase();
+  if(typedWord.length > 7) typedWord = typedWord.slice(1);
+  if(typedWord == 'devmode'){ajDev.style.display = "block"};
+});
+function deletesave(){
+    console.log("Deleting Save.")
+    setCookie("savedata","",0)
+}
+function loadsave(){
+    console.log("Fetching save file...")
+    savefile = getCookie("savedata")
+    savedata = savefile;
+    savefile = savefile.split("/")
+    if (savedata != ""){
+        console.log("Save file found. loading save...")
+        advancements = savefile[0].split(",")
+        milk = parseInt(savefile[1])
+        grantmilk(0)
+        if (advancements.includes("cow")){grantbuilding(cow,parseInt(savefile[2]))}
+        if (advancements.includes("farm")){grantbuilding(farm,parseInt(savefile[3]))}
+        if (advancements.includes("mine")){grantbuilding(mine,parseInt(savefile[4]))}
+        if (savefile.length >= 7){Cowhappy = parseInt(savefile[6])}
+        if (advancements.includes("matterReform")){grantbuilding(matterReform,parseInt(savefile[7]))}
+        if (advancements.includes("milkduper")){grantbuilding(milkduper,parseInt(savefile[8]))}
+    } else {
+        console.log("No save file detected. Cannot load save.");
+        
+    }
+    
+}
 
+function setCookie(cname, cvalue, exdays=3650) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  let expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  if (document.cookie == ''){
+    console.log("Failed to save game to cookies.")
+    alert("Failed to save game data. You might be offline or playing the game locally. (Error Code: 'cannotWriteToCookies')")
+    savetxt.innerHTML = "Failed to save game data.";
+  } else {
+    console.log("Game saved successfully.")
+    savetxt.innerHTML = "Saved Game to cookies.";
+  }
+}
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let ca = document.cookie.split(';');
+  for(let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
 
 function testitems(){
     milk = Infinity;
