@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<title id="title"></title>
+<style>
+html {
+    font-size: 250%;
+    text-align: center;
+    line-height: 50%;
+}
+</style>
+<br>
+<h1 id="timer" style="font-size: 350%">12:34:56</h1>
+<p id="unixtime">123456789</p>
+<br><br>
+<label id="monthlabel">Hour 11</label><progress max="12" value="11" id="monthbar"></progress><br>
+<label id="daylabel">Hour 11</label><progress max="24" value="11" id="daybar"></progress><br>
+<label id="hourlabel">Hour 11</label><progress max="24" value="11" id="hourbar"></progress><br>
+<label id="minutelabel">Minute 11</label><progress max="60" value="11" id="minutebar"></progress><br>
+<label id="secondlabel">Second 11</label><progress max="60" value="11" id="secondbar"></progress><br>
+<label id="millisecondlabel">Millisecond 11</label><progress max="1000" value="11" id="millisecondbar"></progress>
+<script>
+let monthToDay = [31,28,31,30,31,30,31,31,30,31,30,31]
+function calcTime(){
+    let d = new Date()
+    let month = (d.getMonth() + 1);if (month.toString().length == 1){month = `0${month}`};
+    let day = d.getDate();if (day.toString().length == 1){day = `0${day}`};
+    let hour = d.getHours();if (hour.toString().length == 1){hour = `0${hour}`};
+    let minutes = d.getMinutes();if (minutes.toString().length == 1){minutes = `0${minutes}`};
+    let seconds = d.getSeconds();if (seconds.toString().length == 1){seconds = `0${seconds}`};
+    let milliseconds = d.getMilliseconds()
+    if (milliseconds.toString().length == 1){milliseconds = `00${milliseconds}`} else if (milliseconds.toString().length == 2){milliseconds = `0${milliseconds}`};
+    timer.innerHTML = `${hour}:${minutes}:${seconds}`
+    unixtime.innerHTML = `(${Math.floor(d.getTime() / 1000)})`
+    title.innerHTML = `${hour}:${minutes}:${seconds}`
+    // update labels.
+    monthlabel.innerHTML = `Month ${month}`;daylabel.innerHTML = `Day ${day}`;hourlabel.innerHTML = `Hour ${hour}`;minutelabel.innerHTML = `Minute ${minutes}`;secondlabel.innerHTML = `Second ${seconds}`;millisecondlabel.innerHTML = `Millisecond ${milliseconds}`;
+    // update progress
+    monthbar.value = month
+    daybar.max = monthToDay[d.getMonth()]
+    daybar.value = day
+    hourbar.value = hour
+    minutebar.value = minutes
+    secondbar.value = seconds
+    millisecondbar.value = milliseconds
+}
+let runTimer = setInterval( calcTime, 10);
+</script>

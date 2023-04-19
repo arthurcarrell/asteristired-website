@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<style>
+html {
+    font-size: 150%;
+    font-family: sans-serif;
+    background-color: rgb(30, 30, 30);
+    color: white;
+    text-align: center;
+}
+#board {
+    line-height: 0%;
+}
+.lightSquare {
+    width: 75px;
+    max-width: 75px;
+    height: 75px;
+    max-height: 75px;
+    background-color: rgb(226, 251, 255);
+    display: inline-block;
+    vertical-align: top;
+}
+
+.lightSquareH {
+    width: 75px;
+    max-width: 75px;
+    height: 75px;
+    max-height: 75px;
+    background-color: rgb(247, 198, 198);
+    display: inline-block;
+    vertical-align: top;
+}
+
+.darkSquare {
+    width: 75px;
+    max-width: 75px;
+    height: 75px;
+    max-height: 75px;
+    background-color: rgb(124 142 172);
+    display: inline-block;
+    vertical-align: top;
+}
+
+.darkSquareH {
+    width: 75px;
+    max-width: 75px;
+    height: 75px;
+    max-height: 75px;
+    background-color: rgb(172, 124, 124);
+    display: inline-block;
+    vertical-align: top;
+}
+</style>
+<span id="board">
+</span>
+<p id="debugCoords">X: 0 Y: 0</p>
+<span id="extrainfo"></span>
+<script>
+let debugMode = true
+let mode = ""
+let offsetx = 0
+let offsety = 0
+let pieces = []
+let editorCoords = ""
+let selectedPiece = [1,1,"w"]
+let currentTurn = "w"
+let pieceSelected = false
+
+
+class Piece {
+    constructor(team,type,x,y){
+        this.team = team;
+        this.type = type;
+        this.image = `${team}${type}`
+        this.x = x
+        this.y = y
+        this.tags = []
+        if (type == "k" || type == "r"){this.tags.push("canCastle")}
+        if (type == "p"){this.tags.push("canDoubleMove")}
+        document.getElementById(`${x}${y}`).innerHTML = `<img src="chesspieces/${team}${type}.png" width=75 height=75>`
+    };
+};
+
+// generating the board
+
+function createBoard(size){
+    // create the board, and vary the sizes.
+    let darkSquare = false;
+    let placeSquareType = "";
+    for (let i=1;i < size+1;i++){
+        for (let h=1;h < size+1;h++){
+            if(darkSquare == false){placeSquareType="lightSquare";darkSquare = true}
+                else {placeSquareType = "darkSquare";darkSquare = false}
+                board.innerHTML += `<span class="${placeSquareType}" id="${h}${i}" onmouseover="updateDebugCoords(${h},${i})" onclick="if(mode === 'pieceEditor'){editorHighlight(${h},${i})} else {selectPiece(${h},${i})}"></span>`
+        }
+        board.innerHTML += "<br>"
+        if(darkSquare == false){darkSquare = true}
+                else {darkSquare = false}
+    };
+};
+
+function readFENletter(letter,x,y){
+    let pieceValues = ["b","k","n","p","q","r"]
+    if (pieceValues.includes(letter.toLowerCase())){
+        if (letter == letter.toUpperCase()){pieces.push(new Piece("w",letter.toLowerCase(),x,y))} else {pieces.push(new Piece("b",letter.toLowerCase(),x,y))}
+        return `Placed Piece: ${letter} at X: ${x} Y: ${y}`
+    } else {return letter}
+}
+
+function readFENString(fenstring){
+    let fen = fenstring.split("")
+    console.log(fen)
+    let x = 1
+    let y = 1
+    for (let i=0;i < fenstring.length;i++){
+        console.log(`${fen[i]},${x},${y}`)
+        fenResponse = readFENletter(fen[i],x,y)
+        console.log(fenResponse)
+        if (fenResponse == "/"){x = 1;y += 1} else if (!isNaN(fenResponse)){x += parseInt(fenResponse)} else {x += 1}
+    }
+}
+
+// Selecting and moving pieces.
+function selectEmptySpace(x,y){
+    if (document.getElementById(`${x}${y}`).className == "lightSquareH" || document.getElementById(`${x}${y}`).className == "darkSquareH"){
+        curPiece = pieces[findPiece(selectedPiece[0],selectedPiece[1])]
+        if (curPiece.type == "p" && curPiece.tags.includes("canDoubleMove")){curPiece.tags.pop("canDoubleMove")}
+        oldx = selectedPiece[0]; oldy = selectedPiece[1];
+        curPiece.x = x
+        curPiece.y = y
+        selectedPiece[2] = ""
+        document.getElementById(`${x}${y}`).innerHTML = `<img src="chesspieces/${curPiece.image}.png" width=75 height=75>`
+        document.getElementById(`${oldx}${oldy}`).innerHTML = ""
+        if (currentTurn == "w"){currentTurn = "b"} else {currentTurn = "w"}
+    }
+    clearHighlightedSpaces()
+}
+
+function takePiece(x,y){
+        curPiece = pieces[findPiece(selectedPiece[0],selectedPiece[1])]
+        pieces.pop(pieces[findPiece(x,y)])
+        console.log("Piece gone.")
+        clearHighlightedSpaces()
+        if (curPiece.type == "p" && curPiece.tags.includes("canDoubleMove")){curPiece.tags.pop("canDoubleMove")}
+        oldx = selectedPiece[0]; oldy = selectedPiece[1];
+        curPiece.x = x
+        curPiece.y = y
+        selectedPiece[2] = ""
+        document.getElementById(`${x}${y}`).innerHTML = `<img src="chesspieces/${curPiece.image}.png" width=75 height=75>`
+        document.getElementById(`${oldx}${oldy}`).innerHTML = ""
+        if (currentTurn == "w"){currentTurn = "b"} else {currentTurn = "w"}
+}
+
+function selectPiece(x,y){
+    console.log("Tile Selected")
+    if (findPiece(x,y) === false){selectEmptySpace(x,y);return}
+    if (document.getElementById(`${x}${y}`).className == "lightSquareH" || document.getElementById(`${x}${y}`).className == "darkSquareH" ){if(pieces[findPiece(x,y)].team !== currentTurn){takePiece(x,y);return}}
+    if (pieces[findPiece(x,y)].team !== currentTurn){return;}
+    pieceSelected = true
+    clearHighlightedSpaces()
+    avaliableMoves = checkAvalibleMoves(pieces[findPiece(x,y)])
+    selectedPiece = [x,y,pieces[findPiece(x,y)].team]
+    console.log(avaliableMoves)
+    showAvalibleMoves(avaliableMoves,x,y)
+}
+
+function highlightSquare(element){
+    if (element === null){console.log("null");return false;}
+    if (element.className == "darkSquare"){element.className = "darkSquareH"} else if (element.className == "lightSquare") {element.className = "lightSquareH"}
+}
+
+function removeHighlightOnSquare(element){
+    if (element.className == "darkSquareH"){element.className = "darkSquare"} else if (element.className == "lightSquareH") {element.className = "lightSquare"}
+}
+
+function clearHighlightedSpaces(){
+    pieceSelected = false
+    for (let y=1;y < 9;y++){
+        for (let x=1;x<9;x++){
+            removeHighlightOnSquare(document.getElementById(`${x}${y}`))
+        }
+    }
+}
+
+function showAvalibleMoves(avaliableMoves,x,y){
+    element = document.getElementById(`${x}${y}`)
+    highlightSquare(element)
+    for (let movesCycle=0;movesCycle < avaliableMoves.length;movesCycle++){
+        let element = document.getElementById(`${x+avaliableMoves[movesCycle][0]}${y+avaliableMoves[movesCycle][1]}`)
+        highlightSquare(element)
+    }
+}
+
+function checkAvalibleMoves(piece){
+    let avaliableMoves = [] // the avaliable moves and their coordinates, relative to the pieces current pos.
+    let team = 1
+    if (piece.team == "w"){
+        team = -1
+    }
+    if (piece.type == "p"){avaliableMoves.push([0 * team,1 * team]);if (piece.tags.includes("canDoubleMove")){avaliableMoves.push([0 * team,2 * team])}}
+    else if (piece.type == "n"){avaliableMoves.push([2,1],[-2,1],[2,-1],[-2,-1],[1,-2],[-1,-2],[-1,2],[1,2])}
+    else if (piece.type == "k"){avaliableMoves.push([-1*team,-1*team],[1*team,-1*team],[0*team,-1*team],[1*team,0*team],[1*team,1*team],[0*team,1*team],[-1*team,1*team],[-1*team,0*team])}
+    else {avaliableMoves = checkSlidingPieces(piece.type,piece.team,piece.x,piece.y)}
+    console.log(avaliableMoves)
+    console.log(team)
+    return avaliableMoves
+}
+
+function checkSlidingPieces(piece,team,x,y,){
+    // define some stuff
+    let dir = []
+    avaliableMoves = []
+    moveincrease = [[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]]
+    let stopped = false
+    // get the directions that the sliding pieces go.
+    if (piece == "r"){dir = [0,2,4,6]}
+    else if (piece == "b"){dir = [1,3,5,7]}
+    else if (piece == "q"){dir = [0,1,2,3,4,5,6,7]}
+    // check all 8 sides.
+    for (let spinSides=0;spinSides < 8;spinSides++){
+        if (dir.includes(spinSides)){
+            let movecoords = moveincrease[spinSides]
+            let iterations = 0
+            stopped = false
+            // keep going until you find a piece or go of the board.
+            while (stopped == false){
+                iterations += 1
+                let pieceOutOfBoundary = x+(movecoords[0]*iterations) < 1 || x+(movecoords[0]*iterations) > 8 ||  y+(movecoords[1]*iterations) < 1 ||  y+(movecoords[1]*iterations) > 8
+                // is it an enemy piece? if so, it can be taken.
+                if (findPiece(x+(movecoords[0]*iterations), y+(movecoords[1]*iterations)) !== false || pieceOutOfBoundary){
+                    if (findPiece(x+(movecoords[0]*iterations), y+(movecoords[1]*iterations)) !== false){
+                        let curPiece = findPiece(x+(movecoords[0]*iterations), y+(movecoords[1]*iterations))
+                        if (pieces[curPiece].team !== team){
+                            // its an enemy piece, we can go one more to capture it.
+                            avaliableMoves.push([movecoords[0]*iterations, movecoords[1]*iterations])
+                        }
+                    }
+                    stopped = true;
+                } else {
+                    console.log("No blocking, increasing iterations")
+                    avaliableMoves.push([movecoords[0]*iterations, movecoords[1]*iterations])
+                }
+            }
+        }
+    }
+    console.log(avaliableMoves)
+    return avaliableMoves
+}
+
+function findPiece(x,y){
+    for (let selPiece=0;selPiece < pieces.length;selPiece++){
+        if (pieces[selPiece].x == x && pieces[selPiece].y == y){return selPiece}
+    }
+    return false
+}
+
+
+function updateDebugCoords(x,y){
+    debugCoords.innerHTML = `X: ${x+offsetx} Y: ${y+offsety} Current Turn: ${currentTurn.toUpperCase()}`
+    return true
+}
+
+function pieceEditor(){
+    createBoard(16);
+    pieceName = prompt("Enter the ID of the piece you would like to edit. (eg: \"b\" for bishop.)")
+    offsetx = -8
+    offsety = -9
+    extrainfo.innerHTML += "<p id=\"editorCoordsDis\"></p>"
+    readFENString(`/16/16/16/16/16/16/16/7${pieceName}`)
+}
+
+function editorHighlight(x,y){
+    highlightSquare(document.getElementById(`${x}${y}`))
+    editorCoords += `[${x+offsetx}*team,${y+offsety}*team],`
+    editorCoordsDis.innerHTML = `[${editorCoords}]`
+}
+
+// start
+
+function start(){
+    console.log("Done");
+    // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR" is the FEN string to set a game up
+    if (mode == "pieceEditor"){pieceEditor()} else {createBoard(8);readFENString("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR")}
+};
+
+start()
+</script>
+</html>

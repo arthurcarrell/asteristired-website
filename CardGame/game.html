@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<style>
+html {
+    background-color: rgb(40, 40, 40);
+    font-size: 200%;
+    text-align: center;
+    font-family: sans-serif;
+}
+img {
+    object-fit: cover;
+}
+.card {
+    height: 360px;
+    width: 220px;
+    border: 5px solid rgb(179, 179, 179);
+    background-color: rgb(136, 136, 136);
+    display:inline-block;
+    vertical-align: top;
+    
+}
+</style>
+<div id="table">
+<div id="enemyside">
+<span class="card" id="01"></span> <span class="card" id="02"></span> <span class="card" id="03"></span> <span class="card" id="04"> </span> <span class="card" id="05"></span>
+</div><br>
+<div id="playerside">
+<span class="card" id="11"></span> <span class="card" id="12"></span> <span class="card" id="13"></span> <span class="card" id="14"></span> <span class="card" id="15"></span>
+</div>
+</div>
+<script>
+class Card {
+    constructor(id,name=null,image="imgs/placeholder.png",rarity=0,attack=null,health=null,passive={},onuse=console.log("Unused"),tags=[]){
+        this.id = id
+        this.tags = []
+        this.image = image
+        this.rarity = rarity
+        this.passive = passive
+        function onUse(){
+            onuse
+        }
+        this.onuse = onUse();
+        if(name===null){this.name = `${id}.name`} else {this.name = name}
+        if(attack===null){this.attack = 0;this.tags.push("cannotAttack")} else {this.attack = attack}
+        if(health===null){this.health = 0;this.tags.push("doomedCard")} else {this.health = health}
+
+        
+    }
+}
+
+const cardLib = {
+    "noCard": new Card("NoCard",null,null,null,null,undefined,{},{},["emptyCard"]),
+    "theTest":new Card("theTest","The Test","imgs/placeholder.png",0,6,9)
+}
+
+
+
+function playCard(card,replaceBoardItem,side){
+    // make the card span.
+    cardAppear = ``
+    if (card.tags.includes("emptyCard") === false){
+        cardAppear += `<span onclick="${card.onuse}">`
+        cardAppear += `<span><br><b>${card.name}</b></span>`
+        cardAppear += `<img src='${card.image}' height='130px' width='200px'><br>`
+        cardAppear += `<span style="float: right;"><img src='imgs/health.png' width='50' height="50" ></span>`
+        cardAppear += `<span style="float: left;">${card.attack}</span>`
+        cardAppear += "<br><br>"
+        cardAppear += `<span style="float: left;"><img src='imgs/atk.png' width='50' height="50" ></span>`
+        cardAppear += `<span style="float: right;">${card.health}</span>`
+        cardAppear += `</span>`
+    }
+    document.getElementById(`${side}${replaceBoardItem}`).innerHTML = cardAppear;
+}
+
+playCard(cardLib["theTest"],3,0)
+</script>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<style>
+html {
+    background-color: rgb(41, 41, 41);
+    color: white;
+    font-family: sans-serif;
+    font-size: 150%;
+    text-align: center;
+}
+
+.physical {color: rgb(255, 144, 65);}
+.fire {color: rgb(255, 97, 40);}
+.ice {color: rgb(111, 253, 255);}
+.electric {color: rgb(255, 206, 43);}
+.wind {color: rgb(138, 255, 84);}
+.psychic {color: rgb(255, 105, 242);}
+.nuclear {color: rgb(105, 255, 250);}
+.bless {color: rgb(255 235 184);}
+.curse {color: rgb(255, 101, 101);}
+
+</style>
+<b><br><br>
+<h1 id="personaName">(personaName)</h1>
+<p>Lv. <span id="personaBaseLevel"></span> (<span id="personaTarot"></span>)</p>
+<table style="margin-left:auto;margin-right:auto;width: 70%;">
+  <tr>
+    <th>Physical</th>
+    <th>Gun</th>
+    <th>Fire</th>
+    <th>Ice</th>
+    <th>Electric</th>
+    <th>Wind</th>
+    <th>Psychic</th>
+    <th>Nuclear</th>
+    <th>Bless</th>
+    <th>Curse</th>
+  </tr>
+  <tr>
+    <th id="physical" class="physical">---</th>
+    <th id="gun" class="physical">---</th>
+    <th id="fire" class="fire">---</th>
+    <th id="ice" class="ice">---</th>
+    <th id="electric" class="electric">---</th>
+    <th id="wind" class="wind">---</th>
+    <th id="psychic" class="psychic">---</th>
+    <th id="nuclear" class="nuclear">---</th>
+    <th id="bless" class="bless">---</th>
+    <th id="curse" class="curse">---</th>
+  </tr>
+</table><br>
+<h2>Itemisation:</h2>
+<p id="itemRegular">Regular: (itemRegular)</p>
+<p id="itemAlarm">Fusion Alarm: (itemAlarm)</p>
+</b>
+<script src="personas.js"></script>
+<script>
+// add a search parameter to the webpage, this will be used for getting personas.
+const params = new Proxy(new URLSearchParams(window.location.search), {
+  get: (searchParams, prop) => searchParams.get(prop),
+});
+
+function getPersona(persona){
+  return personaHolder[persona]
+}
+let currentPersona = getPersona("arsene")
+if (params.persona != undefined){
+  let currentPersona = getPersona(params.persona)
+}
+
+
+
+function updateAll(persona){
+  updateName(persona)
+  updateElements(persona)
+  updateItems(persona)
+}
+
+function updateName(persona){
+  personaName.innerHTML = persona["name"]
+  personaBaseLevel.innerHTML = persona["baseLevel"]
+  personaTarot.innerHTML = persona["arcana"]
+}
+
+function updateElements(persona){
+  for (let i=0;i<persona["elementStats"].length;i++){
+    let elementlist = ["physical","gun","fire","ice","electric","wind","psychic","nuclear","bless","curse"]
+    let translateElements = {"false":"---","weak":"Wk","res":"Res","absorb":"Abs","nul":"Nul","Repel":"Rpl"}
+    if (!persona["elementStats"][i]){
+      document.getElementById(elementlist[i]).innerHTML = translateElements["false"]
+    } else {
+      document.getElementById(elementlist[i]).innerHTML = translateElements[persona["elementStats"][i]]
+    }
+  }
+}
+
+function updateItems(persona){
+  itemRegular.innerHTML = `Regular: ${persona["convertItem"]["regular"]}`
+  itemAlarm.innerHTML = `Fusion Alarm: ${persona["convertItem"]["alarm"]}`
+}
+updateAll(currentPersona)
+</script>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<link rel="icon" id="icon">
+<style>html {font-size: 150%;font-family: sans-serif;color: white;background-color: rgb(25, 25, 25);text-align: center;}</style>
+<br><br><br>
+<h1 id="notsupported">You need to use Firefox in order for this to work.</h1>
+<p>Press SPACE to start.</p>
+<br>
+<p>VERY IMPORTANT!</p>
+<p>If you obsure the video, it will pause it. which will desync the video.</p>
+<script>
+var started = false;
+var badappleSong = new Audio("song.mp3");
+badappleSong.loop = true;
+document.body.onkeyup = function(e) {
+  if (e.key == " " ||
+      e.code == "Space" ||      
+      e.keyCode == 32      
+  ) {
+    if (!started){Start();started=true;};
+  }
+} // thanks stack overflow
+
+if (!navigator.userAgent.includes("Firefox")){
+    started = true;
+} else {notsupported.innerHTML = ""}
+function Start(){
+    badappleSong.play();
+    icon.href = "badapple.gif"
+}
+
+</script>

@@ -1,0 +1,12 @@
+==Milk==
+
+Milk is the primary objective in milk clicker. Your goal is to increase
+the amount of milk you have. There is no end goal to milk clicker
+and you can keep going forever.
+
+__Ways to obtain__
+
+You can obtain milk from:
+
+Clicking the milk icon. 
+Buying buildings to produce milk.

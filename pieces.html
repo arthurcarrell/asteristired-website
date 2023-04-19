@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<style>div {display: flex; justify-content: center; align-items: center;} html {background-color: black; text-align: center; font-size: 250%; font-family: sans-serif; color: white;-moz-user-select: none;-khtml-user-select: none;-webkit-user-select: none;user-select: none;}</style>
+<br><br><br><h2><b>Puzzle Pieces:</b></h2>
+<div id="elements"></div>
+<br><br>
+<h1 style="color:rgb(2, 2, 2);" id="talk">...</h1>
+<script>
+adrift = new Audio("Adrift.ogg")
+adrift.loop = true
+
+function setCookie(cname, cvalue, exdays=3640) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    let expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+}
+
+function playmusicbox(){
+    adrift.play()
+    talk.innerHTML = "...?"
+}
+if (getCookie("musicbox") == "true"){
+    elements.innerHTML += "<img src=musicbox.png width=50 height=50 onclick=\"playmusicbox()\">"
+}
+</script>
+</html>

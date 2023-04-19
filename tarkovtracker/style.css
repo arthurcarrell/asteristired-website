@@ -1,0 +1,16 @@
+@font-face {
+    font-family: Tarkov;
+    src: url(bender.light.otf);
+}
+
+@font-face {
+    font-family: Tarkov_bold;
+    src: url(bender.regular.otf);
+}
+
+html {
+    font-family: Tarkov;
+    background-color: rgb(33, 33, 33);
+    color: white;
+    font-size: 150%;
+}

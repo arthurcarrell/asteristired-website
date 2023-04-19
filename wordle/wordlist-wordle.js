@@ -1,6 +1,5 @@
 // regular words.
 var wordList;
-var niceMsg;
 var dailyword; 
 var dailyNumber = 82;
 
@@ -23,6 +22,6 @@ mastermodewords = ["proxy","adieu","soare","azure","sixty","femur","argon","nylo
 "poppy","fable","coral","erode","khaki","cacti","gorge","fluke","elegy","helix","foyer","exact","modal","vowel","alpha","lilac",
 "gripe","mania","thesis"]
 
-niceMsg = ["You did it!","Well done!","Nice!","Awesome!","Great!","Amazing!"]
+var niceMsg = ["You did it!","Well done!","Nice!","Awesome!","Great!","Amazing!"]
 
 

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<style>html {font-size: 150%;font-family: sans-serif;color: white;background-color: rgb(25, 25, 25);text-align: center;}</style>
+<h1>Phasmophobia Ghost Guide.</h1>
+<p><i>(These will automatically cross themselves out. but you can do it if needed.)</i></p>
+<p><b id="addghosts"></b></p>
+<br>
+<h1 id="sanityamount">??%</h1>
+<p>Sanity levels or below for a hunt to start.</p>
+<p id="extraSanInfo">Select a ghost to gain more information about it.</p>
+<br>
+<h3>Evidence:</h3>
+<div id="evidenceshow"></div>
+<div>
+
+
+</div>
+<script>
+const ghosts = ["Banshee","Demon","Deogen","Goryo","Hantu","Jinn","Mare","Moroi","Myling","Obake","Oni","Onryo","Phantom","Poltergeist",
+"Raiju","Revenant","Shade","Spirit","Thaye","The Mimic","The Twins","Wraith","Yokai","Yurei"]
+const allEvidence = ["No Evidence","D.O.T.S", "EMF 5", "Fingerprints","Freezing Temperatures","Ghost Orb","Ghost Writing","Spirit Box"]
+const evidenceObj = {
+    "No Evidence":ghosts,
+    "D.O.T.S":["Banshee","Deogen","Goryo","Oni","Phanton","Raiju","Thaye","Wraith","Yokai","Yurei"],
+    "Ghost Writing":["Demon","Deogen","Goryo","Mare","Moroi","Myling","Poltergeist","Revenant","Shade","Spirit","Thaye"],
+    "EMF 5":["Goryo","Jinn","Myling","Obake","Oni","Raiju","Shade","Spirit","The Twins","Wraith"],
+    "Ghost Orb":["Banshee","Hantu","Mare","Obake","Onryo","Raiju","Revenant","Thaye","Yokai","Yurei"],
+    "Fingerprints":["Banshee","Demon","Goryo","Hantu","Jinn","Myling","Obake","Phantom","Poltergeist","The Mimic"],
+    "Freezing Temperatures":["Demon","Hantu","Jinn","Moroi","Oni","Onryo","Revenant","Shade","The Mimic","The Twins","Yurei"],
+    "Spirit Box":["Deogen","Mare","Moroi","Onryo","Phantom","Poltergeist","Spirit","The Mimic","The Twins","Wraith","Yokai"]
+}
+const ghostHuntReq = {
+    "Demon":{"percent":20,"condition":"It can hunt always.","extra":"A rare ability may trigger a hunt, even if sanity is above percent needed."},
+    "Deogen":{"percent":-10,"condition":"It can hunt always.","extra":""},
+    "Mare":{"percent":10,"condition":"It can hunt always.","extra":"10% more sanity needed if ghost room dark."},
+    "Onryo":{"percent":10,"condition":"It can hunt always.","extra":"Can extinguish fires, if it does, it has a chance to start a hunt."},
+    "Raiju":{"percent":15,"condition":"It can hunt always.","extra":"15% more sanity if near electronics."},
+    "Shade":{"percent":-15,"condition":"It can hunt always.","extra":"Cannot start hunt if player is in room."},
+    "Thaye":{"percent":25,"condition":"It can hunt always.","extra":"Will attempt to lose 6% every 1/2 minutes."},
+    "Yokai":{"percent":30,"condition":"It can hunt always.","extra":"Gains 30% more sanity threshold if talking."},
+}
+const ghostWeirdos = ["Demon","Deogen","Mare","Onryo","Raiju","Shade","Thaye","Yokai"]
+
+function makeghostnotes(){
+    for (i=0;i < ghosts.length;i++){
+        addghosts.innerHTML += `<span id="notes${ghosts[i]}" style="font-size: 200%;color: white;" onclick="scrollnotes('${ghosts[i]}')">${ghosts[i]}</span>&nbsp;&nbsp;&nbsp;`
+        if (i % 6 == 0 && i != 0){addghosts.innerHTML += "<br><br>"}
+    }
+}
+var confirmedGhost = ""
+function formatnotes(ghost,format){
+    if (format == "not"){
+        document.getElementById(`notes${ghost}`).style.color = "gray";
+        document.getElementById(`notes${ghost}`).innerHTML = `<i><s>${ghost}</s></i>`;
+    }
+    if (format == "confirm"){
+        document.getElementById(`notes${ghost}`).style.color = "rgb(161, 255, 159)";
+        document.getElementById(`notes${ghost}`).innerHTML = `<u>${ghost}</u>`;
+        confirmedGhost = ghost
+    }
+    if (format == "unknown"){
+        document.getElementById(`notes${ghost}`).style.color = "white";
+        document.getElementById(`notes${ghost}`).innerHTML = `${ghost}`;
+    }
+}
+function scrollnotes(ghost){
+    colorStyle = document.getElementById(`notes${ghost}`).style.color;
+    if (colorStyle == "gray"){
+        formatnotes(ghost,"confirm")
+    } if (colorStyle == "white"){
+        formatnotes(ghost,"not")
+    } if (colorStyle == "rgb(161, 255, 159)"){
+        formatnotes(ghost,"unknown")
+    }
+}
+
+function showevidence(){
+    for (i=0;i < 3;i++){
+        evidenceshow.innerHTML += `<select id='evidence${i}' name='Evidence ${i+1}'></select><br>`
+        for (j=0;j < allEvidence.length;j++){
+            document.getElementById(`evidence${i}`).innerHTML += `<option value="${allEvidence[j]}">${allEvidence[j]}</option>`
+        }
+    }
+    evidenceshow.innerHTML += `<button onclick="submitevidence()">Submit</button>`
+}
+
+var evidenceChecking = "No Evidence"
+function notViableGhost(item){
+    if (evidenceObj[evidenceChecking].includes(item) == false){formatnotes(item,"not")}
+}
+function submitevidence(){
+    for (h=0;h < 3;h++){
+        evidenceChecking = document.getElementById(`evidence${h}`).value
+        ghosts.forEach(notViableGhost)
+    }
+}
+
+function calculateHuntPercent(electric=false,dark=false,talking=false){
+    let huntpercent = 50
+    if (confirmedGhost == ""){return "??%"}
+    //getGhostTips()
+    if (ghostWeirdos.includes(confirmedGhost)){
+        if (electric == true && confirmedGhost == "Raiju"){
+            huntpercent += ghostHuntReq[confirmedGhost]["percent"]
+            return `${huntpercent}%`
+        } else if (dark == true && confirmedGhost == "Mare"){
+            huntpercent += ghostHuntReq[confirmedGhost]["percent"]
+            return `${huntpercent}%`
+        } else if (dark == false && confirmedGhost == "Mare"){
+            huntpercent += -ghostHuntReq[confirmedGhost]["percent"]
+            return `${huntpercent}%`
+        } else if (talking == true && confirmedGhost == "Yokai"){
+            huntpercent += ghostHuntReq[confirmedGhost]["percent"]
+            return `${huntpercent}%`
+        }
+        huntpercent += ghostHuntReq[confirmedGhost]["percent"]
+    }
+    return `${huntpercent}%`
+}
+
+function getGhostTips(){
+    if (confirmedGhost === ""){return "Select a ghost to gain more information about it's sanity requirements."}
+    if (ghostHuntReq[confirmedGhost] != undefined){return ghostHuntReq[confirmedGhost]["extra"]} else {return "This ghost does not have any special ability related to sanity."}
+}
+makeghostnotes();
+showevidence();
+var intervalId = window.setInterval(function(){
+  sanityamount.innerHTML = calculateHuntPercent()
+  extraSanInfo.innerHTML = getGhostTips()
+}, 50);
+</script>
+</html>

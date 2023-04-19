@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<script src="articlecontrol.js"></script>
+<title id="titletxt"></title>
+<style>html {font-size: 150%;font-family: sans-serif;color: white;background-color: rgb(45, 45, 45);}</style>
+
+
+<body id="ShowPage"><!-- page data will appear here. --></body>
+
+<script>
+const params = new Proxy(new URLSearchParams(window.location.search), {
+  get: (searchParams, prop) => searchParams.get(prop),
+});
+if (params.article != null){loadarticledata(params.article)} else {loadarticledata("non_existant_article")};
+
+</script>
+</html>

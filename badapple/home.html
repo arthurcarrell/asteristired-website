@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<link rel="icon" id="icon">
+<title>&#128078;&#127822;!</title>
+<style>html {font-size: 150%;font-family: sans-serif;color: white;background-color: rgb(25, 25, 25);text-align: center;}</style>
+<br><br><br>
+<h1 id="notsupported">You need to use Firefox in order for this to work.</h1>
+<p>Press SPACE to start.</p>
+<br>
+<p>VERY IMPORTANT!</p>
+<p>Once started, dont do anything. a lot of stuff will cause it to desync.</p>
+<p>The first time you start the video, it will be desynced, just refresh after starting and it will be fixed.</p>
+<script>
+var started = false;
+var badappleSong = new Audio("song.mp3");
+document.body.onkeyup = function(e) {
+  if (e.key == " " ||
+      e.code == "Space" ||      
+      e.keyCode == 32      
+  ) {
+    if (!started){Start();started=true;};
+  }
+} // thanks stack overflow
+
+if (!navigator.userAgent.includes("Firefox")){
+    started = true;
+} else {notsupported.innerHTML = ""}
+function Start(){
+    badappleSong.play();
+    icon.href = "badApple.gif"
+}
+
+</script>

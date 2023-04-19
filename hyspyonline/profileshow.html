@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<script src="searchcontrol.js"></script>
+<title id="titletxt"></title>
+<style>
+@font-face {
+    font-family: minecraft;
+    src: url(./minecraft.ttf);
+}
+html {font-size: 150%;font-family: minecraft;color: white;background-color: rgb(45, 45, 45);text-align: center;}</style>
+
+
+<body id="ShowPage">
+<h2><span id="titlerank">[[rank]]</span><span id="nametitle">[[name]]</span></h2><br>
+<span>Losses: [[losses]]</span>&nbsp;<span> Wins: [[victories]]</span>
+<br><span style="color: gray"><i>(W/L Ratio: [[winloseratio]])</i></span>
+</body>
+
+<script>
+const params = new Proxy(new URLSearchParams(window.location.search), {
+  get: (searchParams, prop) => searchParams.get(prop),
+});
+//if (params.article != null){loadarticledata(params.article)} else {loadarticledata("non_existant_article")};
+
+</script>
+</html>

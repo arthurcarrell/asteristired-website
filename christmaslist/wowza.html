@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<title >Arthur's epic christmas list.</title>
+<style>
+html {
+    background-color: rgb(39, 39, 39);
+    font-size: 300%;
+    color: white;
+    text-align: center;
+    font-family: sans-serif;
+}
+
+a {
+    color: white;
+}
+</style>
+<style id="setColor1"></style>
+<style id="setColor2"></style>
+<style id="linkhover"></style>
+<span id="leftbar"></span> <span>Arthur's Christmas List</span> <span id="rightbar"></span>
+<p style="font-size: 50%;">(ver. 2022)</p>
+<p style="font-size: 50%;">(I dont expect you to get all of these!)</p><br>
+<a style="font-size: 50%;">iPhone</a><br>
+<a style="font-size: 50%;">Splatoon 3</a><br>
+<a style="font-size: 50%;">More RAM for PC (I need about 16GB and I currently have 7GB)</a><br>
+<a style="font-size: 50%;">And a partrich in a pair tree.</a>
+<script>
+let colorsSwapped = false;
+let colorcodes = ["#FF3B3B","#129422"]
+function generateBars(amount,symbol="="){
+    let addtobar = ""
+    for (let i=0;i < (amount/2);i++){
+        addtobar += `<span class="color1">${symbol}</span>`
+        addtobar += `<span class="color2">${symbol}</span>`
+    }
+    leftbar.innerHTML = addtobar
+    addtobar = ""
+    for (let i=0;i < (amount/2);i++){
+        addtobar += `<span class="color1">${symbol}</span>`
+        addtobar += `<span class="color2">${symbol}</span>`
+    }
+    rightbar.innerHTML = addtobar
+}
+function swapColors(){
+    if (colorsSwapped == false) {
+        setColor1.innerHTML = `.color1 {color: ${colorcodes[0]};}`;
+        setColor2.innerHTML = `.color2 {color: ${colorcodes[1]};}`;
+        linkhover.innerHTML = `a:hover {color: ${colorcodes[0]};}`;
+        colorsSwapped = true;
+    } else {
+        setColor1.innerHTML = `.color1 {color: ${colorcodes[1]};}`;
+        setColor2.innerHTML = `.color2 {color: ${colorcodes[0]};}`;
+        linkhover.innerHTML = `a:hover {color: ${colorcodes[1]};}`;
+        colorsSwapped = false;
+    };
+};
+generateBars(5)
+swapColors()
+let doSwap = setInterval(swapColors, 1000);
+</script>
+</html>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <title>Wordle Clone</title>
+<script src="wordlist-wordle.js"></script><script src="save-to-cookies.js"></script>
 <script>
 var version = 2.0;
 var beta = true;
@@ -191,8 +192,6 @@ p {
 
 <!-- Bottom Text -->
 <p id="debugtext"></p>
-
-<script src="wordlist-wordle.js"></script><script src="save-to-cookies.js"></script>
 </audio>
 <script>
 /* told you */
@@ -206,7 +205,7 @@ var mode = "regular";
 var shockSecret = 0;
 var gameStarted = 0;
 var gameWon = 0;
-var numberofGuesses = 200;
+var numberofGuesses = 6;
 var guessesUsed = 0;
 var wordLength = 5; // the length of the word.
 var guessedWhiteWords = [];

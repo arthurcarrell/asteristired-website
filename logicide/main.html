@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<title>LOGIC - A stupid web-based logic gate programming language!</title>
+<style>
+html {
+    background-color: rgb(43, 43, 43);
+    color: white;
+    font-size: 150%;
+    font-family: sans-serif;
+}
+#code {font-family: 'Courier New', Courier, monospace;}
+.comment {color: gray; font-style: italic;}
+</style>
+<div class="code" id="codehere"><span class="comment"><!-- code will appear here! --></span></div>
+<script>
+let text = ""
+let inTag = false
+let keyRemoved = "None"
+function writechr(chr){
+    text += chr
+}
+
+function removechr(){
+    text = text.split("")
+    keyRemoved = text.pop()
+    text = text.join("")
+    if (keyRemoved == "<"){inTag = false;} else if (keyRemoved == ">"){inTag = true;}
+    if (inTag == true){
+        removechr()
+    }
+}
+
+function formattext(){
+    codehere.innerHTML = text
+    codehere.innerHTML += "_"
+}
+
+writechr("// Welcome to my stupid IDE! Made in like 1 hour.<br>// The <> keys are reserved as this is what HTML uses.")
+formattext()
+
+document.addEventListener("keydown", function onEvent(event) {
+    if (event.key === "Backspace") {removechr()}
+    else if (event.key === "Enter") {writechr("<br>")}
+    formattext()
+});
+
+const blacklistedKeys = ["Enter","<",">"]
+document.addEventListener("keypress", function onEvent(event2) {
+    if (blacklistedKeys.includes(event2.key) === false){writechr(event2.key)}
+    formattext()
+});// stole from stack overflow.
+</script>
+</html>

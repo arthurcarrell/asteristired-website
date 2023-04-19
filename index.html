@@ -1,154 +1,140 @@
 <!DOCTYPE html>
 <html>
-<title>Arthurs cool website.</title>
-<body>
-<style>
-body {
-  background-color: rgb(63, 148, 148);
-}
-h1 {
-    padding: 500px,0;
-    font-family: sans-serif;
-    color: white;
-    font-size: 200%;
-    text-align: center;
-}
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
-}
-h2 {
-    padding: 500px,0;
-    font-family: sans-serif;
-    color: white;
-    font-size: 150%;
-    text-align: center;
-}
-#links {
-    padding: 500px,0;
-    font-family: sans-serif;
-    color: rgb(255, 255, 255);
-    font-size: 100%;
-    text-align: center;
-}
-a:link {
+<title>Arthur's Website!</title>
+<style id="style">
+    body {
+        font-size: 250%;
+        font-family: sans-serif;
+        text-align: center;
+        background-color: rgb(136 156 255);
+    }
+    .glass {
+        /* From https://css.glass */
+        background: rgba(255, 255, 255, 0.366);
+        border-radius: 16px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(4.8px);
+        -webkit-backdrop-filter: blur(4.8px);
+        margin: auto;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+    a:link {
     /* set color of unvisited link*/
-    color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     text-decoration: none;
-}
-a:visited {
-    /* set color of visited link*/
-    color: rgb(255, 255, 255);
-    text-decoration: none;
-}
-a:hover {
-    /* do when hovered over.*/
-  color: rgb(255, 255, 255);
-  font-size: 120%;
-  text-decoration: underline;
-  width: 75;
-  height: 75;
-}
+    }
+    a:visited {
+        /* set color of visited link*/
+        color: rgb(0, 0, 0);
+        text-decoration: none;
+    }
+    a:hover {
+        /* do when hovered over.*/
+    color: rgb(0, 0, 0);
+    font-size: 120%;
+    text-decoration: underline;
+    width: 75;
+    height: 75;
+    }
 </style>
-<h1>Under Construction!!(soonTM)</h1>
-<img src="quagsire.png" alt="Quagsire" class="center" onclick="quagclick()">
-<h2 id="infotxt">Click Links below to visit those areas.</h2>
-<div id="links">
-<a href="http://www.asteristired.com/wordle/patch-1.3.html"><b>Wordle Clone</b></a></br>
-<a href="http://www.asteristired.com/ideagenerator.html">Idea Generator</a></br>
-<a href="http://www.asteristired.com/oldhomepage.html">Old Homepage</a></br>
-<a href="http://www.asteristired.com/button.html">Second Webpage I ever made.</a></br>
-<a href="http://www.asteristired.com/milkidlegame/game.html">[ALPHA] Milk Clicker Game</a>
-<div id="beta" style="display: none;">
-<p>_____</p>
-<h3 style="color: #ff4242;"><b>BETA AREA:</b></h3>
-<p>(These games are under heavy construction and may not work.)</p><br>
-<a href="http://www.asteristired.com/wordle/wordle-clonev2.html">Wordle Clone v2.0</a>
-</div>
-<p>_____</p>
-<a href="https://github.com/arthurcarrell"><img src="github.png" alt="github" width=50 height=50></a>
-<a href="https://replit.com/@asteristired"><img src="replitlogo.png" alt="replit" width=50 height=50></a>
-<a href="https://discordbotlist.com/bots/hyspy"><img src="hyspylogo.png" alt="hyspy discord bot" width=50 height=50></a>
-<a onclick="doormsg()"><img src="door.png" alt="DOOR" width=50 height=50></a>
-<p>I added some secret areas find them if you would like.</p>
-</div>
-<audio id="wowsosecret">
-<source src="jingle.ogg" type="audio/ogg">
-</body>
-<script>
-let randomNumber = 1+(100-1)*Math.random();
-randomNumber = Math.floor(randomNumber)
-if (randomNumber == 1){
-  window.location.href = "http://www.asteristired.com/recollection.html"
-} else {
-  console.log(randomNumber)}
+<br><br>
+<img src="asteristired.png" width="973" height="86"><br>
+<p id="404" style="display: none;">The page you tried to load does not exist!<br>You have been redirected here.<br>(404 Error)</p>
+<br><b>
+<p>Welcome to asteristired.com!<br>I just put random stuff on here but have fun!<br>(is this a portfolio? eh kinda.)</p>
+<br>
+<span id="selections"><span class="glass" onclick="showtab('aboutme')">&nbsp;About Me&nbsp;</span>&nbsp;<span class="glass" onclick="showtab('games')">&nbsp;Games&nbsp;</span>&nbsp;<span class="glass" onclick="showtab('stuff')">&nbsp;Other Stuff&nbsp;</span></span><br><br>
+<div class="glass" style="width: 1000px;" id="glassinfo">
 
-var wowsosecret = 0;
-var audio = document.getElementById("wowsosecret"); 
-var infotxt = document.getElementById("infotxt")
-var text = 0;
-var quagclicks = 0;
-function secret() { 
-  infotxt.innerHTML = "WOW! you are a good searcher!<br>Looks like a secret has appeared!"
-  alert("Secret admin powers activate! or maybe not.")
-  beta.style = "display: inline;"
-  audio.play();
-  wowsosecret = 1
+<div id="aboutme" style="display: none;">
+<br><p>About me:</p>
+<span><img src="quagsire-icon.png" width="150" height="150"><br><br><a href="https://github.com/arthurcarrell"><img src="github.png" width="75" height="75"></a><a href="https://discordbotlist.com/bots/hyspy"><img src="hyspylogo.png" width="75" height="75"></a><a href="https://replit.com/@asteristired"><img src="replitlogo.png" width="75" height="75"></a><a href="mailto:asteristired@gmail.com"><img src="emailme.png" width="75" height="75"></a></span><br>
+<p>Hi im Arthur, I do HTML, Javascript<br> and Python. I also do minecraft datapacks but does that count?<p>
+</div>
+
+<div id="games" style="display: none;">
+    <br><p>Games:</p><br>
+    <a href="https://asteristired.com/wordle/patch-1.3.html">Wordle Clone</a><br>
+    <a href="https://asteristired.com/milkidlegame/game.html">Milk Clicker</a>
+    <br><br>
+</div>
+
+<div id="stuff" style="display: none;">
+    <br><p>Other Stuff:</p><br>
+    <a href="https://asteristired.com/oldhomepage.html">Old Homepage</a><br>
+    <a href="https://asteristired.com/oldesthomepage.html">Oldest Homepage</a><br>
+    <a href="https://asteristired.com/button.html">The Button</a><br>
+    <a href="https://asteristired.com/ideagenerator.html">Idea Generator</a><br>
+    <a href="https://asteristired.com/coolclock/main.html">Clock</a>
+    <br><br>
+</div>
+
+<div id="betapage" style="display: none;">
+    <br><p>BETA:</p>
+    <a href="https://asteristired.com/wordle/wordle-clonev2.html">Wordle Clone v2.0</a><br>
+    <a href="https://asteristired.com/milkidlegame/game-publish.html">Milk Clicker v2.0</a>
+    <br><br>
+</div>
+</div>
+<br><br><br>
+<script>
+const params = new Proxy(new URLSearchParams(window.location.search), {
+  get: (searchParams, prop) => searchParams.get(prop),
+});
+
+if (params.beta == "true"){selections.innerHTML += '&nbsp;<span class="glass" onclick="showtab(\'betapage\')">&nbsp;BETA&nbsp;</span>'}
+
+function showtab(display){
+    aboutme.style = "display: none;"
+    games.style = "display: none;"
+    stuff.style = "display: none;"
+    betapage.style = "display: none;"
+    if (display == "aboutme"){aboutme.style = "display: inline-block;"}
+    if (display == "games"){games.style = "display: inline-block;"}
+    if (display == "stuff"){stuff.style = "display: inline-block;"}
+    if (display == "betapage"){betapage.style = "display: inline-block;";}
 }
-var typedWord = '';
+coolnameList = ["A","R","T","H","U","R","A","R","T","H","U","R","A","R","T","H","U","R"] // i promise you, im not obssesed with myself...
+var letter = 0;
+function docoolthing(){
+    arthurcool.innerHTML = `${coolnameList[letter]}${coolnameList[letter+1]}${coolnameList[letter+2]}${coolnameList[letter+3]}${coolnameList[letter+4]}${coolnameList[letter+5]}`
+    letter++
+    if (letter == 6) {letter = 0;}
+
+}
+showtab("")
+window.setInterval(function(){
+  docoolthing()
+}, 500);
+
+if (params.redirect == 404){
+    alert("The page you tried to load does not exist, You have been redirected to the homepage.\n(Error: 404)")
+    document.getElementById(404).style = "display: inline-block;"
+}
+
+var typedWord = "";
 window.addEventListener('keypress', function(e){
   var c = String.fromCharCode(e.keyCode);
   typedWord += c.toLowerCase();
-  if(typedWord.length > 11) typedWord = typedWord.slice(1);
-  if(typedWord == 'wowsosecret' && wowsosecret == 0){
-      secret()
+  if(typedWord.length > 14) typedWord = typedWord.slice(1);
+  if(typedWord == 'nocssnoproblem'){
+        style.innerHTML = "";
+        alert("Disabled All CSS on this site! Have fun!")
   }
 });
-var dooropen = 0;
-var answer;
-var doorclicks = 0;
-function doormsg(){
-    doorclicks += 1;
-    switch(doorclicks){
-      case 1:
-        alert("The door refuses to budge.");
-        break;
-      case 2:
-        alert("The door is locked...");
-        break;
-      case 3:
-        alert("This door is not open.");
-        break;
-      case 4:
-        alert("Its a locked door.");
-        break;
-      case 5:
-        alert("You've clicked on this door for 5 times now. what are you expecting to change?");
-        break;
-      case 6:
-        alert("You can check the website's code if you want, this door does literally nothing at the moment.");
-        break;
-      case 7:
-        alert("Although I have big plans for what will be behind this door.");
-        break;
-      case 8:
-        alert("Clicking on this door does nothing.");
-        doorclicks = 7;
-        break;
-    }
-}
 
-function bypass(){
-  console.log("oy, what ye doing in the console");
-}
-
-function quagclick(){
-  quagclicks += 1
-  if (quagclicks == 5 && wowsosecret == 0){
-    secret()
-  }
-}
+/* for the cheeky devtool users. Hi there! */
+console.log("\n\n----------------------------------\n\n")
+console.log("Hello devtool users!")
+console.log("Please dont judge my horribily buggy code.")
+console.log("If you have any suggestions, email me. (Click the @ in the about me page!)\nBut i might not respond :P")
+console.log("p.s, while focused on the website, type \"nocssnoproblem\"")
+console.log("\n\n----------------------------------\n\n")
+console.warn("Be careful on what you are running in the console. Some stuff may break the site.")
+/* although i guess if your reading this you know what you are doing or you are a 5 year old edgy hacker. */
 </script>
+<p style="font-size: medium;" id="arthurcool">ARTHUR</p>
 </html>

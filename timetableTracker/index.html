@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<style>
+html {
+    background-color: rgb(47, 47, 47);
+    color: white;
+    font-family: sans-serif;
+    font-size: 150%;
+    text-align: center;
+}
+</style>
+<h1 id="dayTime"></h1>
+<p id="weekday"></p>
+<script>
+
+function getDate(){
+    date = new Date();
+    const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    const week = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    dayTime.innerHTML = `${getNumberEnding(date.getDate())} ${month[date.getMonth()]} ${date.getFullYear()}`;
+    weekday.innerHTML = week[date.getDay()];
+}
+
+function getNumberEnding(number){
+    number = number.toString()
+    if (number[number.length-1] == 1){return `${number}st`}
+    if (number[number.length-1] == 2){return `${number}nd`}
+    if (number[number.length-1] == 3){return `${number}rd`}
+    return `${number}th`
+}
+
+getDate()
+</script>
+</html>

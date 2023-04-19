@@ -31,14 +31,14 @@ function getdataitem(item){
     returndata = returndata.split(`</${item}>`)[0];
     return returndata;
   } catch{
-    console.error(`Could not find "${item} in savedata"`)
+    console.error(`Could not find "${item}" in savedata`)
     return null
   }
 }
 function loadsavev2(){
     console.log("Fetching Save File...")
     savedata = window.localStorage.getItem("savedata")
-    if (savedata != null){
+    if (savedata != false){
         console.log("Found Save File. Loading save...")
         advancements = getdataitem("advancements").split(","); 
         milk = parseInt(getdataitem("milk"));

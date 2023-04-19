@@ -50,7 +50,7 @@ html {
 <div id="wrapper">
 <div id="ajLeft" style="padding:20px;float:left">
 <!-- TAB 1-->
-<div id="milkclicktab" style="overflow-y:scroll;height: 700px;">
+<div id="milkclicktab" style="overflow:scroll;height: 700px;">
 <img src="textures/milk-bottle.png" onclick="grantmilk(1)">
 <b><p id="manaInfo">MANA: <progress value="0" max="0"></progress> 0/0</p></b>
 <h1 id="milkamount">MILK: [[milkamount]]</h1>
@@ -58,7 +58,7 @@ html {
 <div id="showbuilding"><!-- Shown buildings appear here--></div>
 </div>
 </div>
-<div id="ajCenter" style="padding:30px;float:left;background-color: rgb(66, 66, 66);overflow-y:scroll;height: 700px;">
+<div id="ajCenter" style="padding:30px;float:left;background-color: rgb(66, 66, 66);overflow:scroll;height: 700px;">
     <div id="shop">
     <button id="savetxt" onclick="createsavev2()">Click to save</button>
     <button id="deletetxt" onclick="deletesave()">Click to delete save</button><br>
@@ -74,6 +74,9 @@ html {
     <p id="unlockedbuildings" style="display: none;">[[unlockedbuildings]]</p>
     <p id="gameInfo"></p>
     <p>____________________________________________</p>
+    <h3>&nbsp;&nbsp;Research:</h3>
+    <div id="whattoresearch"><i>Doesn't look like you can research anything right now...</i></div>
+    <h3>&nbsp;&nbsp;Buildings (Research Tier 0):</h3>
     <div id="buildingdisplay"><!-- This is where the buildings get generated --></div>
     <div id="hintbuildings"><i>You may have to do some <b style="color: rgb(221, 98, 98)">research</b> to<br> unlock more buildings.</i></div>
     </div>
@@ -86,7 +89,7 @@ html {
     </div>
 </div>
 </div>
-<div id="ajRight" style="padding:30px;float:left;background-color: rgb(110, 110, 110);overflow-y:scroll;height: 700px;">
+<div id="ajRight" style="padding:30px;float:left;background-color: rgb(110, 110, 110);overflow:scroll;height: 700px;">
 <h1>Building Interactables:</h1>
 <div id="darkbackground">
 <span id="items"></span>
@@ -244,7 +247,7 @@ var allbuildings = [cow,farm,mine,alchemystation,matterReform,milkduper]
 
 function grantmilk(amount){
     milk += amount;
-    milkamount.innerHTML = `MILK: ${shorten(Math.round(milk))}`
+    milkamount.innerHTML = `MILK: ${shorten(Math.round(milk))} litres`
 
 }
 function buildingeffect(name, amount, bypass=false){
@@ -304,6 +307,11 @@ function init(){ // runs on startup
     unlockbuilding(matterReform)
     unlockbuilding(milkduper)
     loadsavev2()
+    console.log("\n\n---------------------------------------------------------\n\n")
+    let cheekyConsoleMsg = ["Hi :D, you wouldnt cheat? would you?","Inspecting my code? or cheating in some milk?","Do you have it in you to CHEAT?","Gamers --> 🗿 Cheaters --> 🤓"]
+    console.log(` --([ ${cheekyConsoleMsg[Math.floor(Math.random() * cheekyConsoleMsg.length)]} ])--`);
+    console.log("But seriously,\nCheating completely ruins the progression for games like these,\n you will get bored very quickly if you cheat.")
+    console.log("But im not your mum, do what you want.")
 }
 function changecowhappy(amount){
     Cowhappy += amount;
